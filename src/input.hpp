@@ -10,12 +10,12 @@
 
 
 map<String,int> input {
-	"up":0,
-	"down":1,
-	"left":2,
-	"right":3,
-	"space":4,
-	"count":5,
+	{"up",0},
+	{"down",1},
+	{"left",2},
+	{"right",3},
+	{"space",4},
+	{"count",5}
 }
 
 class InputManager{

@@ -6,15 +6,15 @@
 
 
 map<String,int> screen_specifications = {
-    "width":640,
-    "height":480,
-    "offset_x":480
+    {"width",640},
+    {"height",480},
+    {"offset_x",480}
 }
 
 map<String,int> block = {
-    "size" : 20,
-    "count_x" : 24,
-    "count_y" : 24
+    {"size",20},
+    {"count_x",24},
+    {"count_y",24}
 }
 
 enum class game_mode {

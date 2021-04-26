@@ -5,23 +5,24 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 
 map<string,int> images = {
-    "player1":0,
-    "player2":1,
-    "bg":2,
-    "bg_red":3,
-    "bg_green":4,
-    "bg_blue":5,
-    "food":6,
-    "food_counter":7,
-    "mon1":8,
-    "mon2":9,
-    "mon3":10,
-    "mon4":11,
-    "mon_run":12,
-    "plate":13,
-    "count":14
+    {"player1",0},
+    {"player2",1},
+    {"bg",2},
+    {"bg_red",3},
+    {"bg_green",4},
+    {"bg_blue",5},
+    {"food",6},
+    {"food_counter",7},
+    {"mon1",8},
+    {"mon2",9},
+    {"mon3",10},
+    {"mon4",11},
+    {"mon_run",12},
+    {"plate",13},
+    {"count",14}
 };
 
 class ImageManager {
@@ -68,7 +69,7 @@ class ImageManager {
         }
 
         void render_copy(SDL_Texture &texture, const SDL_Rect &src,const SDL_Rect &dst) const noexcept {
-            SDL_RenderCopy(renderer_, &texture, &src, &dst);
+            SDL_RenderCopy(renderer_, &texture, &src,&dst);
         }
     ~ImageManager() noexcept { atexit(IMG_Quit); }
 };
