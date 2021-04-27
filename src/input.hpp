@@ -7,23 +7,25 @@
 #include <iostream>
 #include<string>
 #include "global.hpp"
+#include<map>
 
+using namespace std;
 
-map<String,int> input {
+map<string,int> input {
 	{"up",0},
 	{"down",1},
 	{"left",2},
 	{"right",3},
 	{"space",4},
 	{"count",5}
-}
+};
 
 class InputManager{
-	bool edge_key_[2][input["count"]];
-	bool press_key_[2][input["count"]];
+	bool edge_key_[2][5];
+	bool press_key_[2][5];
 
 	public:
-		void InputManager() noexcept {}
+		InputManager() noexcept {}
 		void update() noexcept{
 			const Uint8 *state = SDL_GetKeyboardState(nullptr);
 			bool new_press_key[2][input["count"]];

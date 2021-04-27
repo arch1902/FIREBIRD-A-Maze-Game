@@ -10,7 +10,7 @@
 #include "mixer.hpp"
 #include "player.hpp"
 
-maze<string,int> enemy_character = {
+map<string,int> enemy_character = {
     {"mon1",0},
     {"mon2",1},
     {"mon3",2},

@@ -23,7 +23,7 @@ map<string,int> se_type {
 
 class MixerManager {
   Mix_Music *music_;
-  Mix_Chunk *se_list_[se_type.size()];
+  Mix_Chunk *se_list_[5];
 
   void load_music(const char *path) noexcept {
     music_ = Mix_LoadMUS(path);

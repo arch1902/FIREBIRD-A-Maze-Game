@@ -4,8 +4,10 @@
 #include "image.hpp"
 #include "input.hpp"
 #include "maze.hpp"
+#include<string>
+using namespace std;
 
-maze<string,int> player_type{
+map<string,int> player_type{
     {"p1",0},
     {"p2",1}
 }

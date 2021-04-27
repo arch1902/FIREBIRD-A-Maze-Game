@@ -18,8 +18,8 @@ enum class maze_state {
 class Maze {
     SDL_Renderer *renderer_;
     const ImageManager *image_manager_;
-    maze_state block_[block["count_y"]][block["count_x"]]; // Array of array containing element of type maze_state
-    int home_distance_[block["count_y"]][block["count_x"]];
+    maze_state block_[24][24]; // Array of array containing element of type maze_state
+    int home_distance_[24][24];
 
     public:
     Maze(SDL_Renderer *renderer, const ImageManager *image_manager) noexcept

@@ -47,7 +47,8 @@ struct Point {
 
  public:
   int distance(const Point &p) const noexcept {
-    return (int)math.sqrt( pow((x-p.x),2) + pow((y-p.y),2) );
+    int r = sqrt(pow((x-p.x),2) + pow((y-p.y),2));
+    return r;
   }
 };
 
