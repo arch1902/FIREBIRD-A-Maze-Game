@@ -5,7 +5,7 @@
 #include "input.hpp"
 #include "maze.hpp"
 
-maze<string,int> {
+maze<string,int> player_type{
     {"p1",0},
     {"p2",1}
 }
@@ -138,12 +138,15 @@ class Player {
         ++mut_dst_block.x;
         }
         const Point dst_block = mut_dst_block;
+        Point temp;
 
         const maze_state dst_block_state = maze.check_state(dst_block);
+        temp = {dst_block.x + 1, dst_block.y};
         const maze_state dst_right_block_state =
-            maze.check_state(Point{dst_block.x + 1, dst_block.y});
+            maze.check_state(temp);
+        temp = {dst_block.x - 1, dst_block.y};
         const maze_state dst_left_block_state =
-            maze.check_state(Point{dst_block.x - 1, dst_block.y});
+            maze.check_state(temp);
         // TODO: make private function
         if (dst_block_state == maze_state["food"]
             || dst_block_state == maze_state["init_p1_pos"]
@@ -158,12 +161,14 @@ class Player {
         }
 
         // Circle corner
-        if (maze.check_state(Point{dst_block.x + 2, dst_block.y})
+        temp = {dst_block.x + 2, dst_block.y};
+        if (maze.check_state(temp)
             == maze_state["left_warp_pos"]) {
         next_block_.x = block["count_x"];
         pos_.x = block::size * next_block_.x;
         }
-        if (maze.check_state(Point{dst_block.x - 2, dst_block.y})
+        temp = {dst_block.x - 2, dst_block.y};
+        if (maze.check_state(temp)
             == maze_state["right_warp_pos"]) {
         next_block_.x = -1;
         pos_.x = block["size"] * next_block_.x;
