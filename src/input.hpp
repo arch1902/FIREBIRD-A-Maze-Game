@@ -59,4 +59,4 @@ class InputManager{
 		}
 
 	~InputManager() noexcept{}
-}
+};

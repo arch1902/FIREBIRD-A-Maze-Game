@@ -9,7 +9,7 @@
 #include "font.hpp"
 #include "food.hpp"
 #include "input.hpp"
-#include "map.hpp"
+#include "maze.hpp"
 #include "mixer.hpp"
 #include "player.hpp"
 #include "wipe.hpp"
@@ -53,7 +53,7 @@ class Pacman {
   std::unique_ptr<MixerManager> mixer_manager_;
   std::unique_ptr<Wipe> wipe_;
   std::unique_ptr<InputManager> input_manager_;
-  std::unique_ptr<Map> map_;
+  std::unique_ptr<Maze> map_;
   std::unique_ptr<Food> food_;
   std::unique_ptr<Enemy> enemy_;
   std::unique_ptr<Player> p1_;
@@ -118,7 +118,7 @@ class Pacman {
     {
       SDL_Texture *p_texture = image_manager_->get(images["plate"]);
       SDL_Rect dst;
-      dst.x = screen["offset_x"];
+      dst.x = screen_specifications["offset_x"];
       dst.y = 0;
       SDL_QueryTexture(p_texture, nullptr, nullptr, &dst.w, &dst.h);
       SDL_RenderCopy(renderer_, p_texture, nullptr, &dst);
@@ -127,8 +127,8 @@ class Pacman {
 
     // Draw the score itself.
     {
-      const unsigned int x1 = screen["offset_x"] + 20;
-      const unsigned int y1 = screen["height"] / 7 + 10;
+      const unsigned int x1 = screen_specifications["offset_x"] + 20;
+      const unsigned int y1 = screen_specifications["height"] / 7 + 10;
       const unsigned int x2 = x1 + 40;
       const unsigned int y2 = y1 + 30;
       const unsigned int x3 = x2 + 30;
@@ -136,7 +136,7 @@ class Pacman {
 
       std::stringstream score;
       score << "S c o r e  :  " << std::setw(6) << p1_->get_score();
-      draw_text(font_size::x16, rgb::white, Point{x1, y1}, score.str().c_str());
+      draw_text(font_size["x16"], rgb::white, Point{x1, y1}, score.str().c_str());
 
       SDL_Texture *p_texture = image_manager_->get(images["p1"]);
       SDL_Rect src = {block["size"], 0, block["size"], block["size"]};
@@ -152,7 +152,7 @@ class Pacman {
         const unsigned int offset_y = 80;
         std::stringstream score;
         score << "S c o r e  :  " << std::setw(6) << p2_->get_score();
-        draw_text(font_size::x16, rgb::white, Point{x1, y1 + offset_y},
+        draw_text(font_size["x16"], rgb::white, Point{x1, y1 + offset_y},
                   score.str().c_str());
 
         SDL_Texture *p_texture = image_manager_->get(images["p2"]);
@@ -170,8 +170,8 @@ class Pacman {
 
     // Draw the rest time of power mode.
     {
-      const unsigned int x = screen["offset_x"] + 10;
-      const unsigned int y = screen["height"] / 6 * 4;
+      const unsigned int x = screen_specifications["offset_x"] + 10;
+      const unsigned int y = screen_specifications["height"] / 6 * 4;
       if (p1_->get_power_mode()) {
         SDL_SetRenderDrawColor(renderer_, 255, 255, 0, 255);
         const SDL_Rect dst = {
@@ -209,7 +209,7 @@ class Pacman {
 
   inline void wait_game() const noexcept {
     static Uint32 pre_count;
-    const double wait_time = 1000.0 / screen["max_fps"];
+    const double wait_time = 1000.0 / screen_specifications["max_fps"];
     const Uint32 wait_count = (wait_time + 0.5);
     if (pre_count) {
       const Uint32 now_count = SDL_GetTicks();
@@ -240,7 +240,7 @@ class Pacman {
       std::stringstream ss;
       ss << "FrameRate[" << std::setprecision(2)
          << std::setiosflags(std::ios::fixed) << frame_rate << "]";
-      draw_text(font_size::x16, rgb::white, Point{screen::offset_x + 15, 16},
+      draw_text(font_size["x16"], rgb::white, Point{screen_specifications["offset_x"] + 15, 16},
                 ss.str().c_str());
     }
     pre_count = now_count;
@@ -260,7 +260,7 @@ class Pacman {
     amask = 0xff000000;
 #endif
     SDL_Surface *trans_surface =
-        SDL_CreateRGBSurface(SDL_SWSURFACE, screen["width"], screen["height"], 32,
+        SDL_CreateRGBSurface(SDL_SWSURFACE, screen_specifications["width"], screen_specifications["height"], 32,
                              rmask, gmask, bmask, amask);
     if (trans_surface == nullptr) {
       std::cerr << "CreateRGBSurface failed: " << SDL_GetError() << '\n';
@@ -269,11 +269,11 @@ class Pacman {
     SDL_Texture *trans_texture =
         SDL_CreateTextureFromSurface(renderer_, trans_surface);
     SDL_FreeSurface(trans_surface);
-    const SDL_Rect dst = {0, 0, screen["width"], screen["height"]};
+    const SDL_Rect dst = {0, 0, screen_specifications["width"], screen_specifications["height"]};
     SDL_RenderCopy(renderer_, trans_texture, nullptr, &dst);
     SDL_DestroyTexture(trans_texture);
     if (blink_count_ < 30) {
-      draw_text(font_size::x36, rgb::white, Point{165, 170}, "P a u s e");
+      draw_text(font_size["x36"], rgb::white, Point{165, 170}, "P a u s e");
       ++blink_count_;
     } else if (blink_count_ < 60) {
       ++blink_count_;
@@ -303,8 +303,8 @@ class Pacman {
       flags |= SDL_WINDOW_FULLSCREEN;
     }
     window_ = SDL_CreateWindow("pacman-sdl", SDL_WINDOWPOS_UNDEFINED,
-                               SDL_WINDOWPOS_UNDEFINED, screen["width"],
-                               screen["height"], flags);
+                               SDL_WINDOWPOS_UNDEFINED, screen_specifications["width"],
+                               screen_specifications["height"], flags);
     if (window_ == nullptr) {
       std::cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
@@ -320,13 +320,13 @@ class Pacman {
     mixer_manager_ = std::make_unique<MixerManager>();
     input_manager_ = std::make_unique<InputManager>();
     wipe_ = std::make_unique<Wipe>(renderer_);
-    map_ = std::make_unique<Map>(renderer_, image_manager_.get());
+    map_ = std::make_unique<Maze>(renderer_, image_manager_.get());
     food_ = std::make_unique<Food>(image_manager_.get(), mixer_manager_.get());
     enemy_ =
         std::make_unique<Enemy>(image_manager_.get(), mixer_manager_.get());
-    p1_ = std::make_unique<Player>(player_type::p1, image_manager_.get(),
+    p1_ = std::make_unique<Player>(player_type["p1"], image_manager_.get(),
                                    input_manager_.get());
-    p2_ = std::make_unique<Player>(player_type::p2, image_manager_.get(),
+    p2_ = std::make_unique<Player>(player_type["p2"], image_manager_.get(),
                                    input_manager_.get());
 
     SDL_ShowCursor(SDL_DISABLE);
@@ -334,7 +334,7 @@ class Pacman {
 
   void run() noexcept {
     while(true) {
-      input_manager_->update(debug_mode_);
+      input_manager_->update();
       switch (game_state_) {
         case game_state::title:
           game_title();

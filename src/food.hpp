@@ -15,7 +15,7 @@ class Food {
     counter_food,
   };
 
-  food_state food_[block["count_y"]][block["count_x"]];
+  food_state food_[24][24];
   const ImageManager *image_manager_;
   const MixerManager *mixer_manager_;
 
@@ -28,10 +28,10 @@ class Food {
     for (int y = 0; y < block["count_y"]; ++y) {
       for (int x = 0; x < block["count_x"]; ++x) {
         switch (maze.check_state(Point{x, y})) {
-          case maze_state["food"]:
+          case maze_state::food:
             food_[y][x] = food_state::food;
             break;
-          case maze_state["counter_food"]:
+          case maze_state::counter_food:
             food_[y][x] = food_state::counter_food;
             break;
           default:
@@ -44,8 +44,8 @@ class Food {
 
   void draw() noexcept {
     const SDL_Rect src = {0, 0, block["size"], block["size"]};
-    SDL_Texture *food_texture = image_manager_->get(image["food"]);
-    SDL_Texture *food_counter_texture = image_manager_->get(image["food_counter"]);
+    SDL_Texture *food_texture = image_manager_->get(images["food"]);
+    SDL_Texture *food_counter_texture = image_manager_->get(images["food_counter"]);
     for (int y = 0; y < block["count_y"]; ++y) {
       for (int x = 0; x < block["count_x"]; ++x) {
         SDL_Rect dst;
@@ -124,8 +124,8 @@ class Food {
     }
 
     int rest_food = 0;
-    for (int y = 0; y < block["count_y"]; ++y) {
-      for (int x = 0; x < block["count_x"]; ++x) {
+    for (int y = 0; y <24; ++y) {
+      for (int x = 0; x <24; ++x) {
         if (food_[y][x] == food_state::food
             || food_[y][x] == food_state::counter_food) {
           ++rest_food;

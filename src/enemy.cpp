@@ -3,7 +3,7 @@
 #include <vector>
 #include "global.hpp"
 #include "image.hpp"
-#include "make.hpp"
+#include "maze.hpp"
 #include "mixer.hpp"
 #include "player.hpp"
 
@@ -56,22 +56,22 @@ void Enemy::move_normal_enemy(Enemy_data &enemy, const Maze &maze,
     || front_block_state == maze_state::warp_street;
 
   const Point left_block = enemy.block + left_pos[enemy.dir];
-  const map_state left_block_state = maze.check_state(left_block);
+  const maze_state left_block_state = maze.check_state(left_block);
   // TODO: make private function
   const bool move_to_left_block_p =
-    left_block_state == map_state::food
-    || left_block_state == map_state::init_p1_pos
-    || left_block_state == map_state::init_p2_pos
-    || left_block_state == map_state::counter_food;
+    left_block_state == maze_state::food
+    || left_block_state == maze_state::init_p1_pos
+    || left_block_state == maze_state::init_p2_pos
+    || left_block_state == maze_state::counter_food;
 
   const Point right_block = enemy.block + right_pos[enemy.dir];
-  const map_state right_block_state = maze.check_state(right_block);
+  const maze_state right_block_state = maze.check_state(right_block);
   // TODO: make private function
   const bool move_to_right_block_p =
-    right_block_state == map_state::food
-    || right_block_state == map_state::init_p1_pos
-    || right_block_state == map_state::init_p2_pos
-    || right_block_state == map_state::counter_food;
+    right_block_state == maze_state::food
+    || right_block_state == maze_state::init_p1_pos
+    || right_block_state == maze_state::init_p2_pos
+    || right_block_state == maze_state::counter_food;
 
   // move back at random
   // TODO: make private function
@@ -79,7 +79,7 @@ void Enemy::move_normal_enemy(Enemy_data &enemy, const Maze &maze,
       || (390 <= p1.get_power_mode() && p1.get_power_mode() <= 400)
       || (390 <= p2.get_power_mode() && p2.get_power_mode() <= 400)) {
     if (maze.check_state(enemy.block + back_pos[enemy.dir])
-        == map_state::enemy_house) {
+        == maze_state::enemy_house) {
       enemy.next_block = left_block;
       enemy.dir += 3;
       enemy.dir %= 4;

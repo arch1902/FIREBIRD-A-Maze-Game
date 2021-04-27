@@ -7,10 +7,10 @@
 #include<string>
 using namespace std;
 
-map<string,int> player_type{
-    {"p1",0},
-    {"p2",1}
-}
+map<string,char> player_type{
+    {"p1",'0'},
+    {"p2",'1'}
+};
 
 class Player {
     char type_;
@@ -36,7 +36,7 @@ class Player {
 
     void init_pos() noexcept {
         switch (type_) {
-        case player_type["p1"]: {
+        case '0': {
             pos_ = {block["size"] * 9, block["size"] * 18};
             block_ = {9, 18};
             next_block_ = {9, 18};
@@ -45,7 +45,7 @@ class Player {
             anime_weight_ = 0;
             return;
         }
-        case player_type["p2"]: {
+        case '1': {
             pos_ = {block["size"] * 14, block["size"] * 18};
             block_ = {14, 18};
             next_block_ = {14, 18};
@@ -59,8 +59,8 @@ class Player {
 
     void draw(const game_mode mode) const noexcept {
         switch (type_) {
-        case player_type["p1"]: {
-            SDL_Texture *p_texture = image_manager_->get(image["p1"]);
+        case '0': {
+            SDL_Texture *p_texture = image_manager_->get(images["p1"]);
             const SDL_Rect src = {(block["size"] * dir_),
                                 (block["size"] * anime_count_),
                                 block["size"],
@@ -73,11 +73,11 @@ class Player {
             SDL_DestroyTexture(p_texture);
             return;
         }
-        case player_type["p2"]: {
+        case '1': {
             if (mode != game_mode::multiplayer) {
             return;
             }
-            SDL_Texture *p_texture = image_manager_->get(image["p2"]);
+            SDL_Texture *p_texture = image_manager_->get(images["p2"]);
             const SDL_Rect src = {(block["size"] * dir_),
                                 (block["size"] * anime_count_),
                                 block["size"],
@@ -150,28 +150,28 @@ class Player {
         const maze_state dst_left_block_state =
             maze.check_state(temp);
         // TODO: make private function
-        if (dst_block_state == maze_state["food"]
-            || dst_block_state == maze_state["init_p1_pos"]
-            || dst_block_state == maze_state["init_p2_pos"]
-            || dst_block_state == maze_state["counter_food"]
-            || dst_block_state == maze_state["warp_street"]
-            || dst_block_state == maze_state["left_warp_pos"]
-            || dst_right_block_state == maze_state["left_warp_pos"]
-            || dst_block_state == maze_state["right_warp_pos"]
-            || dst_left_block_state == maze_state["right_warp_pos"]) {
+        if (dst_block_state == maze_state::food
+            || dst_block_state == maze_state::init_p1_pos
+            || dst_block_state == maze_state::init_p2_pos
+            || dst_block_state == maze_state::counter_food
+            || dst_block_state == maze_state::warp_street
+            || dst_block_state == maze_state::left_warp_pos
+            || dst_right_block_state == maze_state::left_warp_pos
+            || dst_block_state == maze_state::right_warp_pos
+            || dst_left_block_state == maze_state::right_warp_pos) {
         next_block_ = dst_block;
         }
 
         // Circle corner
         temp = {dst_block.x + 2, dst_block.y};
         if (maze.check_state(temp)
-            == maze_state["left_warp_pos"]) {
+            == maze_state::left_warp_pos) {
         next_block_.x = block["count_x"];
-        pos_.x = block::size * next_block_.x;
+        pos_.x = block["size"] * next_block_.x;
         }
         temp = {dst_block.x - 2, dst_block.y};
         if (maze.check_state(temp)
-            == maze_state["right_warp_pos"]) {
+            == maze_state::right_warp_pos) {
         next_block_.x = -1;
         pos_.x = block["size"] * next_block_.x;
         }

@@ -6,9 +6,9 @@
 
 
 map<string,int> font_size = {
-    "x36":0,
-    "x16":1,
-}  
+    {"x36",0},
+    {"x16",1}
+};
 
 class FontManager {
   TTF_Font *fonts_[2];
