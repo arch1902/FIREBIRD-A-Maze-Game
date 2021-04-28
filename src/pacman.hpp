@@ -136,34 +136,34 @@ class Pacman {
 
       std::stringstream score;
       score << "S c o r e  :  " << std::setw(6) << p1_->get_score();
-      draw_text(font_size["x16"], rgb::white, Point{x1, y1}, score.str().c_str());
+      draw_text(font_size["x16"], rgb::white, Point{static_cast<int>(x1), static_cast<int>(y1)}, score.str().c_str());
 
       SDL_Texture *p_texture = image_manager_->get(images["p1"]);
       SDL_Rect src = {block["size"], 0, block["size"], block["size"]};
-      SDL_Rect dst = {x2, y2, block["size"], block["size"]};
+      SDL_Rect dst = {static_cast<int>(x2), static_cast<int>(y2), block["size"], block["size"]};
       SDL_RenderCopy(renderer_, p_texture, &src, &dst);
       SDL_DestroyTexture(p_texture);
 
       std::stringstream life;
       life << "x  " << p1_->get_life();
-      draw_text(font_size::x16, rgb::white, Point{x3, y3}, life.str().c_str());
+      draw_text(font_size["x16"], rgb::white, Point{static_cast<int>(x3), static_cast<int>(y3)}, life.str().c_str());
 
-      if (game_mode_ == game_mode::battle) {
+      if (game_mode_ == game_mode::multiplayer) {
         const unsigned int offset_y = 80;
         std::stringstream score;
         score << "S c o r e  :  " << std::setw(6) << p2_->get_score();
-        draw_text(font_size["x16"], rgb::white, Point{x1, y1 + offset_y},
+        draw_text(font_size["x16"], rgb::white, Point{static_cast<int>(x1), static_cast<int>(y1 + offset_y)},
                   score.str().c_str());
 
         SDL_Texture *p_texture = image_manager_->get(images["p2"]);
         const SDL_Rect src = {block["size"], 0, block["size"], block["size"]};
-        const SDL_Rect dst = {x2, y2 + offset_y, block["size"], block["size"]};
+        const SDL_Rect dst = {static_cast<int>(x2), static_cast<int>(y2 + offset_y), block["size"], block["size"]};
         SDL_RenderCopy(renderer_, p_texture, &src, &dst);
         SDL_DestroyTexture(p_texture);
 
         std::stringstream life;
         life << "x  " << p2_->get_life();
-        draw_text(font_size["x16"], rgb::white, Point{x3, y3 + offset_y},
+        draw_text(font_size["x16"], rgb::white, Point{static_cast<int>(x3), static_cast<int>(y3 + offset_y)},
                   life.str().c_str());
       }
     }
@@ -175,12 +175,12 @@ class Pacman {
       if (p1_->get_power_mode()) {
         SDL_SetRenderDrawColor(renderer_, 255, 255, 0, 255);
         const SDL_Rect dst = {
-            x, y, static_cast<Uint16>(p1_->get_power_mode() / 4), block["size"]};
+            static_cast<int>(x), static_cast<int>(y), static_cast<Uint16>(p1_->get_power_mode() / 4), block["size"]};
         SDL_RenderFillRect(renderer_, &dst);
       }
       if (p2_->get_power_mode()) {
         SDL_SetRenderDrawColor(renderer_, 128, 128, 0, 255);
-        const SDL_Rect dst = {x, y + 30,
+        const SDL_Rect dst = {static_cast<int>(x), static_cast<int>(y + 30),
                               static_cast<Uint16>(p2_->get_power_mode() / 4),
                               block["size"]};
         SDL_RenderFillRect(renderer_, &dst);

@@ -57,14 +57,14 @@ void Maze::init(const game_mode mode) noexcept {
       "#......................#"
       "########################";
 
-  for (int y = 0; y < block::count_y; ++y) {
-    for (int x = 0; x < block::count_x; ++x) {
+  for (int y = 0; y < 24; ++y) {
+    for (int x = 0; x < 24; ++x) {
       block_[y][x] = char_to_maze_state(block_src[y * block["count_x"] + x]);
     }
   }
 
   if (mode == game_mode::multiplayer) {
-    block_[18][14] = map_state::init_p2_pos;
+    block_[18][14] = maze_state::init_p2_pos;
   }
 
   // '.' : enemy can reach, '#' : enemy cannot reach
@@ -129,20 +129,20 @@ void Maze::init(const game_mode mode) noexcept {
   }
 }
 
-void Maze::draw(const unsigned int game_level) const noexcept {
+void Maze::draw( int game_level) const noexcept {
   SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
   SDL_RenderClear(renderer_);
 
   SDL_Texture *p_texture = nullptr;
-  const unsigned int mod = game_level % 4;
+   int mod = game_level % 4;
   if (mod == 1) {
-    p_texture = image_manager_->get(image["bg"]);
+    p_texture = image_manager_->get(images["bg"]);
   } else if (mod == 2) {
-    p_texture = image_manager_->get(image["bg_red"]);
+    p_texture = image_manager_->get(images["bg_red"]);
   } else if (mod == 3) {
-    p_texture = image_manager_->get(image["bg_green"]);
+    p_texture = image_manager_->get(images["bg_green"]);
   } else {
-    p_texture = image_manager_->get(image["bg_blue"]);
+    p_texture = image_manager_->get(images["bg_blue"]);
   }
 
   {
@@ -151,7 +151,7 @@ void Maze::draw(const unsigned int game_level) const noexcept {
     for (int y = 0; y < block["count_y"]; ++y) {
       for (int x = 0; x < block["count_x"]; ++x) {
         const SDL_Rect dst = {(block["size"] * x),
-                              (block["size"] * y), block["size"]
+                              (block["size"] * y), block["size"],
                               block["size"]};
         switch (block_[y][x]) {
           case maze_state::food:
@@ -194,10 +194,7 @@ void Maze::draw(const unsigned int game_level) const noexcept {
         }
         const maze_state under_block = mut_under_block;
         if ((block == maze_state::block) && (under_block == maze_state::food)) {
-          const SDL_Rect dst = {(block["size"]* x),
-                                (block["size"] * y + block["size"] / 2),
-                                block["size"],
-                                block["size"]};
+          const SDL_Rect dst = {(20 * x),(20 * y + 10),20,20};
           image_manager_->render_copy(*p_texture, src, dst);
         }
       }

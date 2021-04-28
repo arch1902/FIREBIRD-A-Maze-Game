@@ -8,7 +8,7 @@
 #include "food.hpp"
 #include "image.hpp"
 #include "input.hpp"
-#include "map.hpp"
+#include "maze.hpp"
 #include "mixer.hpp"
 #include "player.hpp"
 #include "wipe.hpp"
@@ -28,13 +28,13 @@ void Pacman::game_title() noexcept {
   switch (game_count_) {
     case 0: {
       wipe_->set_wipe_in();
-      wipe_->draw(screen["width"]);
+      wipe_->draw(screen_specifications["width"]);
       ++game_count_;
       break;
     }
     case 1: {
       draw_text(font_size["x36"], rgb::black, title_pos, title_str);
-      wipe_->draw(screen["width"]);
+      wipe_->draw(screen_specifications["width"]);
       if (wipe_->update()) {
         ++game_count_;
       }
@@ -52,7 +52,7 @@ void Pacman::game_title() noexcept {
         blink_count_ = 0;
       }
 
-      if (input_manager_->edge_key_p(player_type["p1"], input_["x"])
+      if (input_manager_->edge_key_p(player_type["p1"], input["x"])
           || input_manager_->edge_key_p(player_type["p2"], input["x"])
           || input_manager_->edge_key_p(player_type["p1"], input["space"])) {
         ++game_count_;
@@ -62,8 +62,8 @@ void Pacman::game_title() noexcept {
     }
     case 3: {
       draw_text(font_size["x36"], rgb::black, title_pos, title_str);
-      if (!input_manager_->press_key_p(player_type["p1"], input_["x"])
-          && !input_manager_->press_key_p(player_type["p2"], input_["x"])
+      if (!input_manager_->press_key_p(player_type["p1"], input["x"])
+          && !input_manager_->press_key_p(player_type["p2"], input["x"])
           && !input_manager_->press_key_p(player_type["p1"], input["space"])) {
         ++game_count_;
       }
@@ -83,17 +83,17 @@ void Pacman::game_title() noexcept {
         case game_mode::multiplayer: {
           SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
           SDL_RenderFillRect(renderer_, &vs_str_dst);
-          draw_text(font_size::x16, rgb::black, p1_mode_pos, p1_mode_str);
-          draw_text(font_size::x16, rgb::white, vs_mode_pos, vs_mode_str);
+          draw_text(font_size["x16"], rgb::black, p1_mode_pos, p1_mode_str);
+          draw_text(font_size["x16"], rgb::white, vs_mode_pos, vs_mode_str);
           break;
         }
       }
 
       if (input_manager_->press_key_p(player_type["p1"], input["x"])
           || input_manager_->press_key_p(player_type["p2"], input["x"])
-          || input_manager_->press_key_p(player_type["p1"], input_device["space"])) {
+          || input_manager_->press_key_p(player_type["p1"], input["space"])) {
         wipe_->set_wipe_out();
-        wipe_->draw(screen["width"]);
+        wipe_->draw(screen_specifications["width"]);
         ++game_count_;
       }
     }
@@ -115,7 +115,7 @@ void Pacman::game_title() noexcept {
         }
       }
 
-      wipe_->draw(screen["width"]);
+      wipe_->draw(screen_specifications["width"]);
 
       // initialize globals
       if (wipe_->update()) {
@@ -165,12 +165,12 @@ void Pacman::game_start() noexcept {
                         0);
       }
       wipe_->set_wipe_in();
-      wipe_->draw(screen["offset_x"]);
+      wipe_->draw(screen_specifications["offset_x"]);
       ++game_count_;
       break;
     }
     case 1: {
-      wipe_->draw(screen["offset_x"]);
+      wipe_->draw(screen_specifications["offset_x"]);
       if (wipe_->update()) {
         ++game_count_;
       }
@@ -238,12 +238,12 @@ void Pacman::game_clear() noexcept {
 
   if (game_count_ == 0) {
     wipe_->set_wipe_out();
-    wipe_->draw(screen["offset_x"]);
+    wipe_->draw(screen_specifications["offset_x"]);
     ++game_count_;
     return;
   }
 
-  wipe_->draw(screen["offset_x"]);
+  wipe_->draw(screen_specifications["offset_x"]);
   if (wipe_->update()) {
     if (game_level_ >= 256) {
       game_count_ = 0;
@@ -273,18 +273,18 @@ void Pacman::game_miss() noexcept {
     Mix_PlayChannel(-1, mixer_manager_->get_se(se_type["death"]), 0);
     wipe_->set_wipe_out();
     if (p1_->get_life() == 0 || p2_->get_life() == 0) {
-      wipe_->draw(screen["width"]);
+      wipe_->draw(screen_specifications["width"]);
     } else {
-      wipe_->draw(screen["offset_x"]);
+      wipe_->draw(screen_specifications["offset_x"]);
     }
     ++game_count_;
     return;
   }
 
   if (p1_->get_life() == 0 || p2_->get_life() == 0) {
-    wipe_->draw(screen["width"]);
+    wipe_->draw(screen_specifications["width"]);
   } else {
-    wipe_->draw(screen["offset_x"]);
+    wipe_->draw(screen_specifications["offset_x"]);
   }
 
   Player *p = p1_->get_damaged() ? p1_.get() : p2_.get();
@@ -321,13 +321,13 @@ void Pacman::game_over() noexcept {
         case 0: {
           draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
           wipe_->set_wipe_in();
-          wipe_->draw(screen["width"]);
+          wipe_->draw(screen_specifications["width"]);
           ++game_count_;
           break;
         }
         case 1: {
           draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
-          wipe_->draw(screen["width"]);
+          wipe_->draw(screen_specifications["width"]);
           if (wipe_->update()) {
             ++game_count_;
           }
@@ -350,17 +350,17 @@ void Pacman::game_over() noexcept {
             blink_count_ = 0;
           }
 
-          if (input_manager_->press_key_p(player_type["p1"], input_device["x"])
-              || input_manager_->press_key_p(player_type["p2"], input_device["x"])
-              || input_manager_->press_key_p(player_type["p1"], input_device["space"])) {
+          if (input_manager_->press_key_p(player_type["p1"], input["x"])
+              || input_manager_->press_key_p(player_type["p2"], input["x"])
+              || input_manager_->press_key_p(player_type["p1"], input["space"])) {
             ++game_count_;
             wipe_->set_wipe_out();
-            wipe_->draw(screen["width"]);
+            wipe_->draw(screen_specifications["width"]);
           }
           break;
         }
         case 3: {
-          wipe_->draw(screen["width"]);
+          wipe_->draw(screen_specifications["width"]);
           if (wipe_->update()) {
             blink_count_ = 0;
             game_count_ = 0;
@@ -375,18 +375,18 @@ void Pacman::game_over() noexcept {
       }
       break;
     }
-    case game_mode::battle: {
+    case game_mode::multiplayer: {
       switch (game_count_) {
         case 0: {
           draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
           wipe_->set_wipe_in();
-          wipe_->draw(screen["width"]);
+          wipe_->draw(screen_specifications["width"]);
           ++game_count_;
           break;
         }
         case 1: {
           draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
-          wipe_->draw(screen["width"]);
+          wipe_->draw(screen_specifications["width"]);
           if (wipe_->update()) {
             ++game_count_;
           }
@@ -421,17 +421,17 @@ void Pacman::game_over() noexcept {
             blink_count_ = 0;
           }
 
-          if (input_manager_->press_key_p(player_type["p1"], input_device["x"])
-              || input_manager_->press_key_p(player_type["p2"], input_device["x"])
-              || input_manager_->press_key_p(player_type["p1"], input_device["space"])) {
+          if (input_manager_->press_key_p(player_type["p1"], input["x"])
+              || input_manager_->press_key_p(player_type["p2"], input["x"])
+              || input_manager_->press_key_p(player_type["p1"], input["space"])) {
             ++game_count_;
             wipe_->set_wipe_out();
-            wipe_->draw(screen["width"]);
+            wipe_->draw(screen_specifications["width"]);
           }
           break;
         }
         case 3: {
-          wipe_->draw(screen["width"]);
+          wipe_->draw(screen_specifications["width"]);
           if (wipe_->update()) {
             blink_count_ = 0;
             game_count_ = 0;
