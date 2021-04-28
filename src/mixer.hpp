@@ -12,7 +12,7 @@
 #include <memory>
 #include <string>
 
-map<string,int> se_type {
+static map<string,int> se_type {
   {"siren",0},
   {"beginning",1},
   {"death",2},

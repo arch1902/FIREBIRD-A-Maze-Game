@@ -20,7 +20,7 @@ $(TARGET): $(OBJS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< $(LDFLAGS) -o $@
+	$(CXX) $(CXXFLAGS) -c $< $(LDFLAGS) -o $@ 
 
 clean:
 	-rm -rf $(OBJ_DIR) $(TARGET)

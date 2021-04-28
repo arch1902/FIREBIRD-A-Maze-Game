@@ -11,7 +11,7 @@
 
 using namespace std;
 
-map<string,int> input {
+static map<string,int> input {
 	{"up",0},
 	{"down",1},
 	{"left",2},

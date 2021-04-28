@@ -10,7 +10,7 @@
 #include "mixer.hpp"
 #include "player.hpp"
 
-map<string,int> enemy_character = {
+static map<string,int> enemy_character = {
     {"mon1",0},
     {"mon2",1},
     {"mon3",2},

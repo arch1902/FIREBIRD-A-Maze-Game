@@ -7,7 +7,7 @@
 #include<string>
 using namespace std;
 
-map<string,char> player_type{
+static map<string,char> player_type{
     {"p1",'0'},
     {"p2",'1'}
 };

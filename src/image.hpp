@@ -7,7 +7,7 @@
 #include <string>
 #include <map>
 
-map<string,int> images = {
+static map<string,int> images = {
     {"player1",0},
     {"player2",1},
     {"bg",2},

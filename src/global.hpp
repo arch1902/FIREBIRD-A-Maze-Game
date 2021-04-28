@@ -6,13 +6,13 @@
 #include<map>
 using namespace std;
 
-map<string,int> screen_specifications = {
+static map<string,const int> screen_specifications = {
     {"width",640},
     {"height",480},
     {"offset_x",480}
 };
 
-map<string,int> block = {
+static map<string,int> block = {
     {"size",20},
     {"count_x",24},
     {"count_y",24}

@@ -5,7 +5,7 @@
 #include <string>
 
 
-map<string,int> font_size = {
+static map<string,int> font_size = {
     {"x36",0},
     {"x16",1}
 };
