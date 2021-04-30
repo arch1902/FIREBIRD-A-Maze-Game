@@ -13,7 +13,7 @@
 #include "player.hpp"
 #include "wipe.hpp"
 
-void Pacman::game_title() noexcept {
+void Pacman::game_title()  {
   SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
   SDL_RenderClear(renderer_);
 
@@ -21,29 +21,29 @@ void Pacman::game_title() noexcept {
   const Point p1_mode_pos = Point{270, 300};
   const Point vs_mode_pos = Point{270, 350};
   const char *title_str = "P  a  c  -  M  a  n";
-  const char *p1_mode_str = "1P MODE";
-  const char *vs_mode_str = "VS MODE";
+  const char *p1_mode_str = "1 Player";
+  const char *vs_mode_str = "2 Player";
   const SDL_Rect p1_str_dst = {250, 298, 112, 26};
   const SDL_Rect vs_str_dst = {250, 348, 112, 26};
   switch (game_count_) {
     case 0: {
       wipe_->set_wipe_in();
-      wipe_->draw(screen_specifications["width"]);
+      wipe_->draw(640);
       ++game_count_;
       break;
     }
     case 1: {
-      draw_text(font_size["x36"], rgb::black, title_pos, title_str);
-      wipe_->draw(screen_specifications["width"]);
+      draw_text(0, rgb::black, title_pos, title_str);
+      wipe_->draw(640);
       if (wipe_->update()) {
         ++game_count_;
       }
       break;
     }
     case 2: {
-      draw_text(font_size["x36"], rgb::black, title_pos, title_str);
+      draw_text(0, rgb::black, title_pos, title_str);
       if (blink_count_ < 30) {
-        draw_text(font_size["x16"], rgb::black, Point{205, 300},
+        draw_text(1, rgb::black, Point{205, 300},
                   "P r e s s   S p a c e   K e y");
         ++blink_count_;
       } else if (blink_count_ < 60) {
@@ -52,75 +52,80 @@ void Pacman::game_title() noexcept {
         blink_count_ = 0;
       }
 
-      if (input_manager_->edge_key_p(player_type["p1"], input["x"])
-          || input_manager_->edge_key_p(player_type["p2"], input["x"])
-          || input_manager_->edge_key_p(player_type["p1"], input["space"])) {
+      if ( input_manager_->edge_key_p(0, 4)) {
         ++game_count_;
         blink_count_ = 0;
       }
       break;
     }
     case 3: {
-      draw_text(font_size["x36"], rgb::black, title_pos, title_str);
-      if (!input_manager_->press_key_p(player_type["p1"], input["x"])
-          && !input_manager_->press_key_p(player_type["p2"], input["x"])
-          && !input_manager_->press_key_p(player_type["p1"], input["space"])) {
+      draw_text(0, rgb::black, title_pos, title_str);
+      if ( !input_manager_->press_key_p(0, 4)) {
         ++game_count_;
       }
       break;
     }
     case 4: {
-      draw_text(font_size["x36"], rgb::black, title_pos, title_str);
+      draw_text(0, rgb::black, title_pos, title_str);
 
       switch (game_mode_) {
         case game_mode::single: {
           SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
           SDL_RenderFillRect(renderer_, &p1_str_dst);
-          draw_text(font_size["x16"], rgb::white, p1_mode_pos, p1_mode_str);
-          draw_text(font_size["x16"], rgb::black, vs_mode_pos, vs_mode_str);
+          draw_text(1, rgb::white, p1_mode_pos, p1_mode_str);
+          draw_text(1, rgb::black, vs_mode_pos, vs_mode_str);
           break;
         }
         case game_mode::multiplayer: {
           SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
           SDL_RenderFillRect(renderer_, &vs_str_dst);
-          draw_text(font_size["x16"], rgb::black, p1_mode_pos, p1_mode_str);
-          draw_text(font_size["x16"], rgb::white, vs_mode_pos, vs_mode_str);
+          draw_text(1, rgb::black, p1_mode_pos, p1_mode_str);
+          draw_text(1, rgb::white, vs_mode_pos, vs_mode_str);
           break;
         }
       }
 
-      if (input_manager_->press_key_p(player_type["p1"], input["x"])
-          || input_manager_->press_key_p(player_type["p2"], input["x"])
-          || input_manager_->press_key_p(player_type["p1"], input["space"])) {
+      if ( input_manager_->press_key_p(0, 4)) {
         wipe_->set_wipe_out();
-        wipe_->draw(screen_specifications["width"]);
+        wipe_->draw(640);
         ++game_count_;
       }
+
+
+      if (input_manager_->press_key_p(0, 1)
+          || input_manager_->press_key_p(1, 1)) {
+        game_mode_ = game_mode::multiplayer;
+      } else if (input_manager_->press_key_p(0, 0)
+                 || input_manager_->press_key_p(1,
+                                                0)) {
+        game_mode_ = game_mode::single;
+      }
+      break;
     }
     case 5: {
       switch (game_mode_) {
         case game_mode::single: {
           SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
           SDL_RenderFillRect(renderer_, &p1_str_dst);
-          draw_text(font_size["x16"], rgb::white, p1_mode_pos, p1_mode_str);
-          draw_text(font_size["x16"], rgb::black, vs_mode_pos, vs_mode_str);
+          draw_text(1, rgb::white, p1_mode_pos, p1_mode_str);
+          draw_text(1, rgb::black, vs_mode_pos, vs_mode_str);
           break;
         }
         case game_mode::multiplayer: {
           SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
           SDL_RenderFillRect(renderer_, &vs_str_dst);
-          draw_text(font_size["x16"], rgb::black, p1_mode_pos, p1_mode_str);
-          draw_text(font_size["x16"], rgb::white, vs_mode_pos, vs_mode_str);
+          draw_text(1, rgb::black, p1_mode_pos, p1_mode_str);
+          draw_text(1, rgb::white, vs_mode_pos, vs_mode_str);
           break;
         }
       }
 
-      wipe_->draw(screen_specifications["width"]);
+      wipe_->draw(640);
 
       // initialize globals
       if (wipe_->update()) {
-        map_->init(game_mode_);
-        food_->init(*map_);
+        maze_->init(game_mode_);
+        food_->init(*maze_);
         enemy_->init();
         p1_->init_pos();
         p2_->init_pos();
@@ -149,8 +154,8 @@ void Pacman::game_title() noexcept {
   }
 }
 
-void Pacman::game_start() noexcept {
-  map_->draw(game_level_);
+void Pacman::game_start()  {
+  maze_->draw(game_level_);
   food_->draw();
   enemy_->draw();
   p1_->draw(game_mode_);
@@ -160,17 +165,17 @@ void Pacman::game_start() noexcept {
     case 0: {
       // TODO: Is it correct?
       if (p1_->get_life() == 2 && p2_->get_life() == 2) {
-        Mix_PlayChannel(se_type["beginning"],
-                        mixer_manager_->get_se(se_type["beginning"]),
+        Mix_PlayChannel(1,
+                        mixer_manager_->get_se(1),
                         0);
       }
       wipe_->set_wipe_in();
-      wipe_->draw(screen_specifications["offset_x"]);
+      wipe_->draw(480);
       ++game_count_;
       break;
     }
     case 1: {
-      wipe_->draw(screen_specifications["offset_x"]);
+      wipe_->draw(480);
       if (wipe_->update()) {
         ++game_count_;
       }
@@ -183,9 +188,9 @@ void Pacman::game_start() noexcept {
   if (game_count_ < 130) {
     std::stringstream ss;
     ss << "S t a g e " << game_level_;
-    draw_text(font_size["x36"], rgb::red, Point{153, 170}, ss.str().c_str());
+    draw_text(0, rgb::red, Point{153, 170}, ss.str().c_str());
   } else if (game_count_ < 200) {
-    draw_text(font_size["x36"], rgb::red, Point{165, 170}, "S t a r t");
+    draw_text(0, rgb::red, Point{165, 170}, "S t a r t");
   }
 
   if (game_count_ > 220) {
@@ -196,23 +201,22 @@ void Pacman::game_start() noexcept {
   }
 }
 
-void Pacman::play_game() noexcept {
-  map_->draw(game_level_);
+void Pacman::play_game()  {
+  maze_->draw(game_level_);
   food_->draw();
   enemy_->draw();
   p1_->draw(game_mode_);
   p2_->draw(game_mode_);
   draw_score();
-  enemy_->move(debug_lose_enemy_, *map_, *p1_, *p2_);
-  p1_->move(*map_, game_mode_);
-  p2_->move(*map_, game_mode_);
+  enemy_->move(debug_lose_enemy_, *maze_, *p1_, *p2_);
+  p1_->move(*maze_, game_mode_);
+  p2_->move(*maze_, game_mode_);
   if (p1_->get_power_mode()) {
     p1_->set_power_mode(p1_->get_power_mode() - 1);
   }
   if (p2_->get_power_mode()) {
     p2_->set_power_mode(p2_->get_power_mode() - 1);
   }
-
 
   const bool food_state =
       food_->check_state(game_mode_, *p1_, *p2_);
@@ -223,13 +227,14 @@ void Pacman::play_game() noexcept {
     game_state_ = game_state::miss;
   }
 
-  if (input_manager_->edge_key_p(player_type["p1"], input["space"])) {
+  if (input_manager_->edge_key_p(0, 4)) {
     game_state_ = game_state::pause;
   }
+
 }
 
-void Pacman::game_clear() noexcept {
-  map_->draw(game_level_);
+void Pacman::game_clear()  {
+  maze_->draw(game_level_);
   food_->draw();
   enemy_->draw();
   p1_->draw(game_mode_);
@@ -238,12 +243,12 @@ void Pacman::game_clear() noexcept {
 
   if (game_count_ == 0) {
     wipe_->set_wipe_out();
-    wipe_->draw(screen_specifications["offset_x"]);
+    wipe_->draw(480);
     ++game_count_;
     return;
   }
 
-  wipe_->draw(screen_specifications["offset_x"]);
+  wipe_->draw(480);
   if (wipe_->update()) {
     if (game_level_ >= 256) {
       game_count_ = 0;
@@ -252,7 +257,7 @@ void Pacman::game_clear() noexcept {
       game_count_ = 0;
       game_state_ = game_state::start;
       ++game_level_;
-      food_->init(*map_);
+      food_->init(*maze_);
       enemy_->init();
       p1_->init_pos();
       p2_->init_pos();
@@ -260,8 +265,8 @@ void Pacman::game_clear() noexcept {
   }
 }
 
-void Pacman::game_miss() noexcept {
-  map_->draw(game_level_);
+void Pacman::game_miss()  {
+  maze_->draw(game_level_);
   food_->draw();
   enemy_->draw();
   p1_->draw(game_mode_);
@@ -270,21 +275,21 @@ void Pacman::game_miss() noexcept {
 
   if (game_count_ == 0) {
     Mix_HaltChannel(-1);
-    Mix_PlayChannel(-1, mixer_manager_->get_se(se_type["death"]), 0);
+    Mix_PlayChannel(-1, mixer_manager_->get_se(2), 0);
     wipe_->set_wipe_out();
     if (p1_->get_life() == 0 || p2_->get_life() == 0) {
-      wipe_->draw(screen_specifications["width"]);
+      wipe_->draw(640);
     } else {
-      wipe_->draw(screen_specifications["offset_x"]);
+      wipe_->draw(480);
     }
     ++game_count_;
     return;
   }
 
   if (p1_->get_life() == 0 || p2_->get_life() == 0) {
-    wipe_->draw(screen_specifications["width"]);
+    wipe_->draw(640);
   } else {
-    wipe_->draw(screen_specifications["offset_x"]);
+    wipe_->draw(480);
   }
 
   Player *p = p1_->get_damaged() ? p1_.get() : p2_.get();
@@ -309,7 +314,7 @@ void Pacman::game_miss() noexcept {
   }
 }
 
-void Pacman::game_over() noexcept {
+void Pacman::game_over()  {
   SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
   SDL_RenderClear(renderer_);
 
@@ -319,29 +324,29 @@ void Pacman::game_over() noexcept {
     case game_mode::single: {
       switch (game_count_) {
         case 0: {
-          draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
           wipe_->set_wipe_in();
-          wipe_->draw(screen_specifications["width"]);
+          wipe_->draw(640);
           ++game_count_;
           break;
         }
         case 1: {
-          draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
-          wipe_->draw(screen_specifications["width"]);
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
+          wipe_->draw(640);
           if (wipe_->update()) {
             ++game_count_;
           }
           break;
         }
         case 2: {
-          draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
           std::stringstream ss;
           ss << "Y o u r  S c o r e   " << p1_->get_score();
-          draw_text(font_size["x36"], rgb::black, Point{120, 220},
+          draw_text(0, rgb::black, Point{120, 220},
                     ss.str().c_str());
 
           if (blink_count_ < 30) {
-            draw_text(font_size["x16"], rgb::black, Point{210, 350},
+            draw_text(1, rgb::black, Point{210, 350},
                       "P r e s s  S p a c e  K e y");
             ++blink_count_;
           } else if (blink_count_ < 60) {
@@ -350,17 +355,15 @@ void Pacman::game_over() noexcept {
             blink_count_ = 0;
           }
 
-          if (input_manager_->press_key_p(player_type["p1"], input["x"])
-              || input_manager_->press_key_p(player_type["p2"], input["x"])
-              || input_manager_->press_key_p(player_type["p1"], input["space"])) {
+          if (input_manager_->press_key_p(0, 4)) {
             ++game_count_;
             wipe_->set_wipe_out();
-            wipe_->draw(screen_specifications["width"]);
+            wipe_->draw(640);
           }
           break;
         }
         case 3: {
-          wipe_->draw(screen_specifications["width"]);
+          wipe_->draw(640);
           if (wipe_->update()) {
             blink_count_ = 0;
             game_count_ = 0;
@@ -378,41 +381,41 @@ void Pacman::game_over() noexcept {
     case game_mode::multiplayer: {
       switch (game_count_) {
         case 0: {
-          draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
           wipe_->set_wipe_in();
-          wipe_->draw(screen_specifications["width"]);
+          wipe_->draw(640);
           ++game_count_;
           break;
         }
         case 1: {
-          draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
-          wipe_->draw(screen_specifications["width"]);
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
+          wipe_->draw(640);
           if (wipe_->update()) {
             ++game_count_;
           }
           break;
         }
         case 2: {
-          draw_text(font_size["x36"], rgb::red, gameover_pos, gameover_str);
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
           std::stringstream ss;
           const unsigned int p1_score = p1_->get_score();
           const unsigned int p2_score = p2_->get_score();
           if (p1_score > p2_score) {
             ss << "1 P  W I N  " << p1_score;
-            draw_text(font_size["x36"], rgb::black, Point{170, 240},
+            draw_text(0, rgb::black, Point{170, 240},
                       ss.str().c_str());
           } else if (p1_score < p2_score) {
             ss << "2 P  W I N  " << p2_score;
-            draw_text(font_size["x36"], rgb::black, Point{170, 240},
+            draw_text(0, rgb::black, Point{170, 240},
                       ss.str().c_str());
           } else {
             ss << "D R A W  " << p1_score;
-            draw_text(font_size["x36"], rgb::black, Point{170, 240},
+            draw_text(0, rgb::black, Point{170, 240},
                       ss.str().c_str());
           }
 
           if (blink_count_ < 30) {
-            draw_text(font_size["x16"], rgb::black, Point{210, 380},
+            draw_text(1, rgb::black, Point{210, 380},
                       "P r e s s  S p a c e  K e y");
             ++blink_count_;
           } else if (blink_count_ < 60) {
@@ -421,17 +424,15 @@ void Pacman::game_over() noexcept {
             blink_count_ = 0;
           }
 
-          if (input_manager_->press_key_p(player_type["p1"], input["x"])
-              || input_manager_->press_key_p(player_type["p2"], input["x"])
-              || input_manager_->press_key_p(player_type["p1"], input["space"])) {
+          if (input_manager_->press_key_p(0, 4)) {
             ++game_count_;
             wipe_->set_wipe_out();
-            wipe_->draw(screen_specifications["width"]);
+            wipe_->draw(640);
           }
           break;
         }
         case 3: {
-          wipe_->draw(screen_specifications["width"]);
+          wipe_->draw(640);
           if (wipe_->update()) {
             blink_count_ = 0;
             game_count_ = 0;

@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <SDL2/SDL_mixer.h>
@@ -21,12 +22,12 @@ class Food {
 
  public:
   Food(const ImageManager *image_manager,
-       const MixerManager *mixer_manager) noexcept
+       const MixerManager *mixer_manager) 
       : image_manager_(image_manager), mixer_manager_(mixer_manager) {}
 
-  void init(const Maze &maze) noexcept {
-    for (int y = 0; y < block["count_y"]; ++y) {
-      for (int x = 0; x < block["count_x"]; ++x) {
+   void init(const Maze &maze)  {
+    for (int y = 0; y < 24; ++y) {
+      for (int x = 0; x < 24; ++x) {
         switch (maze.check_state(Point{x, y})) {
           case maze_state::food:
             food_[y][x] = food_state::food;
@@ -42,15 +43,15 @@ class Food {
     }
   }
 
-  void draw() noexcept {
-    const SDL_Rect src = {0, 0, block["size"], block["size"]};
-    SDL_Texture *food_texture = image_manager_->get(images["food"]);
-    SDL_Texture *food_counter_texture = image_manager_->get(images["food_counter"]);
-    for (int y = 0; y < block["count_y"]; ++y) {
-      for (int x = 0; x < block["count_x"]; ++x) {
+   void draw()  {
+    const SDL_Rect src = {0, 0, 20, 20};
+    SDL_Texture *food_texture = image_manager_->get(6);
+    SDL_Texture *food_counter_texture = image_manager_->get(7);
+    for (unsigned int y = 0; y < 24; ++y) {
+      for (unsigned int x = 0; x < 24; ++x) {
         SDL_Rect dst;
-        dst.x = (block["size"] * x);
-        dst.y = (block["size"] * y);
+        dst.x = static_cast<Sint16>(20 * x);
+        dst.y = static_cast<Sint16>(20 * y);
         switch (food_[y][x]) {
           case food_state::food: {
             SDL_QueryTexture(food_texture, nullptr, nullptr, &dst.w, &dst.h);
@@ -76,12 +77,13 @@ class Food {
   /**
    * Return true if all the foods are eaten, and false otherwise.
    */
-  bool check_state(const game_mode mode, Player &p1,
-                          Player &p2) noexcept {
+   bool check_state(const game_mode mode, Player &p1,
+                          Player &p2)  {
     const Point block = p1.get_block();
     switch (food_[block.y][block.x]) {
       case food_state::food: {
-        Mix_PlayChannel(se_type["chomp"], mixer_manager_->get_se(se_type["chomp"]),0);
+        Mix_PlayChannel(3, mixer_manager_->get_se(3),
+                        0);
         food_[block.y][block.x] = food_state::nothing;
         p1.set_score(p1.get_score() + 10);
         break;
@@ -100,8 +102,8 @@ class Food {
       const Point block = p2.get_block();
       switch (food_[block.y][block.x]) {
         case food_state::food: {
-          Mix_PlayChannel(se_type["chomp"],
-                          mixer_manager_->get_se(se_type["chomp"]), 0);
+          Mix_PlayChannel(3,
+                          mixer_manager_->get_se(3), 0);
           food_[block.y][block.x] = food_state::nothing;
           p2.set_score(p2.get_score() + 10);
           break;
@@ -119,13 +121,13 @@ class Food {
 
     if ((p1.get_power_mode() != 0 && p1.get_power_mode() % 80 == 0)
         || (p2.get_power_mode() != 0 && p2.get_power_mode() % 80 == 0)) {
-      Mix_PlayChannel(se_type["siren"], mixer_manager_->get_se(se_type["siren"]),
+      Mix_PlayChannel(0, mixer_manager_->get_se(0),
                       0);
     }
 
     int rest_food = 0;
-    for (int y = 0; y <24; ++y) {
-      for (int x = 0; x <24; ++x) {
+    for (unsigned int y = 0; y < 24; ++y) {
+      for (unsigned int x = 0; x < 24; ++x) {
         if (food_[y][x] == food_state::food
             || food_[y][x] == food_state::counter_food) {
           ++rest_food;
@@ -136,5 +138,5 @@ class Food {
     return rest_food == 0;
   }
 
-  ~Food() noexcept {}
+  ~Food()  {}
 };

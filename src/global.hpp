@@ -2,54 +2,35 @@
 
 #include <SDL2/SDL.h>
 #include <math.h>
-#include <string>
-#include<map>
-using namespace std;
-
-static map<string,const int> screen_specifications = {
-    {"width",640},
-    {"height",480},
-    {"offset_x",480}
-};
-
-static map<string,int> block = {
-    {"size",20},
-    {"count_x",24},
-    {"count_y",24}
-};
 
 enum class game_mode {
   single,
-  multiplayer
+  multiplayer,
 };
-
 
 struct Point {
   int x;
   int y;
 
-  bool operator==(const Point &p) const noexcept {
-    return x == p.x && y == p.y;
+   bool operator==(const Point &rhs) const  {
+    return x == rhs.x && y == rhs.y;
   }
 
-  bool operator!=(const Point &p) const noexcept {
-    return x != p.x || y != p.y;
+   bool operator!=(const Point &rhs) const  {
+    return x != rhs.x || y != rhs.y;
   }
 
-  Point operator+(const Point &p) const noexcept {
-    return Point{x + p.x, y + p.y};
+   Point operator+(const Point &rhs) const  {
+    return Point{x + rhs.x, y + rhs.y};
   }
 
-  void operator+=(const Point &p) noexcept {
-    x += p.x;
-    y += p.y;
+   void operator+=(const Point &rhs)  {
+    x += rhs.x;
+    y += rhs.y;
   }
 
  public:
-  int distance(const Point &p) const noexcept {
-    int r = sqrt(pow((x-p.x),2) + pow((y-p.y),2));
-    return r;
-  }
+      int distance(const Point &z) const {
+        return (int)sqrt(pow(x-z.x,2)+pow(y-z.y,2));
+    }
 };
-
-
