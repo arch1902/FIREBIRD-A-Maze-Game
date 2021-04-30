@@ -88,7 +88,7 @@ class Food {
     const Point block = p1.get_block();
     switch (food_[block.y][block.x]) {
       case food_state::food: {
-        Mix_PlayChannel(se_type::chomp, mixer_manager_->get_se(se_type::chomp),
+        Mix_PlayChannel(se_type::chomp, mixer_manager_->get_sound(se_type::chomp),
                         0);
         food_[block.y][block.x] = food_state::nothing;
         p1.set_score(p1.get_score() + 10);
@@ -109,7 +109,7 @@ class Food {
       switch (food_[block.y][block.x]) {
         case food_state::food: {
           Mix_PlayChannel(se_type::chomp,
-                          mixer_manager_->get_se(se_type::chomp), 0);
+                          mixer_manager_->get_sound(se_type::chomp), 0);
           food_[block.y][block.x] = food_state::nothing;
           p2.set_score(p2.get_score() + 10);
           break;
@@ -127,7 +127,7 @@ class Food {
 
     if ((p1.get_power_mode() != 0 && p1.get_power_mode() % 80 == 0)
         || (p2.get_power_mode() != 0 && p2.get_power_mode() % 80 == 0)) {
-      Mix_PlayChannel(se_type::siren, mixer_manager_->get_se(se_type::siren),
+      Mix_PlayChannel(se_type::siren, mixer_manager_->get_sound(se_type::siren),
                       0);
     }
 

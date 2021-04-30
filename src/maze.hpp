@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "global.hpp"
@@ -20,7 +19,7 @@ class Maze {
   SDL_Renderer *renderer_;
   const ImageManager *image_manager_;
   maze_state block_[24][24];
-  unsigned int home_distance_[24][24];
+  int home_distance_[24][24];
 
  public:
   Maze(SDL_Renderer *renderer, const ImageManager *image_manager) 
@@ -30,21 +29,20 @@ class Maze {
 
   void draw(const unsigned int game_level) const ;
 
-   maze_state check_state(const Point &p) const  {
+    maze_state check_state(const Point &p) const  {
     return block_[p.y][p.x];
   }
 
-   maze_state check_state(const Point &&p) const  {
+    maze_state check_state(const Point &&p) const  {
     return check_state(p);
   }
 
-   unsigned int get_home_distance(const Point &p) const  {
+    int get_home_distance(const Point &p) const  {
     return home_distance_[p.y][p.x];
   }
 
-   unsigned int get_home_distance(const Point &&p) const  {
+    int get_home_distance(const Point &&p) const  {
     return get_home_distance(p);
   }
-
   ~Maze()  {}
 };

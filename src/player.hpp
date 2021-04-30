@@ -53,14 +53,8 @@ class Player {
     switch (type_) {
       case 0: {
         SDL_Texture *p_texture = image_manager_->get(0);
-        const SDL_Rect src = {static_cast<Sint16>(20 * dir_),
-                              static_cast<Sint16>(20 * anime_count_),
-                              20,
-                              20};
-        const SDL_Rect dst = {static_cast<Sint16>(pos_.x),
-                              static_cast<Sint16>(pos_.y),
-                              20,
-                              20};
+        const SDL_Rect src = {(20 * dir_),(20 * anime_count_),20,20};
+        const SDL_Rect dst = {(pos_.x), (pos_.y),20,20};
         image_manager_->render_copy(*p_texture, src, dst);
         SDL_DestroyTexture(p_texture);
         return;
@@ -70,14 +64,8 @@ class Player {
           return;
         }
         SDL_Texture *p_texture = image_manager_->get(1);
-        const SDL_Rect src = {static_cast<Sint16>(20 * dir_),
-                              static_cast<Sint16>(20 * anime_count_),
-                              20,
-                              20};
-        const SDL_Rect dst = {static_cast<Sint16>(pos_.x),
-                              static_cast<Sint16>(pos_.y),
-                              20,
-                              20};
+        const SDL_Rect src = {(20 * dir_),(20 * anime_count_),20,20};
+        const SDL_Rect dst = {(pos_.x),(pos_.y),20, 20};
         image_manager_->render_copy(*p_texture, src, dst);
         SDL_DestroyTexture(p_texture);
         return;
@@ -90,27 +78,20 @@ class Player {
       return;
     }
 
-    const Point dst_pos = {next_block_.x * 20,
-                           next_block_.y * 20};
+    const Point dst_pos = {next_block_.x * 20,next_block_.y * 20};
     if (pos_.x != dst_pos.x || pos_.y != dst_pos.y) {
-      ++anime_weight_;
+      anime_weight_++;
       if (anime_weight_ > 4) {
         anime_count_ = 1 - anime_count_;
         anime_weight_ = 0;
       }
-      const unsigned int move_value = 2;
-      if (dst_pos.x > pos_.x) {
-        pos_.x += move_value;
-      }
-      if (dst_pos.y > pos_.y) {
-        pos_.y += move_value;
-      }
-      if (dst_pos.x < pos_.x) {
-        pos_.x -= move_value;
-      }
-      if (dst_pos.y < pos_.y) {
-        pos_.y -= move_value;
-      }
+      int move_value = 2;
+      if (dst_pos.x > pos_.x) pos_.x += move_value;
+      else if (dst_pos.x < pos_.x) pos_.x -= move_value;
+      
+      if (dst_pos.y > pos_.y) pos_.y += move_value; 
+      else if (dst_pos.y < pos_.y) pos_.y -= move_value;
+
       return;
     }
 
@@ -120,16 +101,16 @@ class Player {
     Point mut_dst_block = next_block_;
     if (input_manager_->press_key_p(type_, 1)) {
       dir_ = 0;
-      ++mut_dst_block.y;
+      mut_dst_block.y++;
     } else if (input_manager_->press_key_p(type_, 2)) {
       dir_ = 1;
-      --mut_dst_block.x;
+      mut_dst_block.x--;
     } else if (input_manager_->press_key_p(type_, 0)) {
       dir_ = 2;
-      --mut_dst_block.y;
+      mut_dst_block.y--;
     } else if (input_manager_->press_key_p(type_, 3)) {
       dir_ = 3;
-      ++mut_dst_block.x;
+      mut_dst_block.x++;
     }
     const Point dst_block = mut_dst_block;
 
@@ -138,7 +119,7 @@ class Player {
         maze.check_state(Point{dst_block.x + 1, dst_block.y});
     const maze_state dst_left_block_state =
         maze.check_state(Point{dst_block.x - 1, dst_block.y});
-    // TODO: make private function
+
     if (dst_block_state == maze_state::food
         || dst_block_state == maze_state::init_p1_pos
         || dst_block_state == maze_state::init_p2_pos

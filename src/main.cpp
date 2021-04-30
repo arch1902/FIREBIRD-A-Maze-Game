@@ -17,7 +17,7 @@ pair<bool, bool> parse_options(const int argc, char **argv)  {
       {nullptr, 0, nullptr, 0},
   };
 
-  for (;;) {
+  while(true) {
     const int curind = optind;
     const int c = getopt_long(argc, argv, "fhv", long_options, nullptr);
     if (c == -1) {
@@ -36,9 +36,6 @@ Options:
       case 'f':
         fullscreen_mode = true;
         break;
-      case 'd':
-        debug_mode = true;
-        break;
       case '?': {
         string av(argv[curind]);
         int n = 0;
@@ -50,7 +47,6 @@ Options:
         exit(EXIT_FAILURE);
       }
       default:
-        // do nothing
         break;
     }
   }

@@ -59,7 +59,7 @@ class MixerManager {
 
   Mix_Music *get_music() const  { return music_; }
 
-  Mix_Chunk *get_se(const unsigned char se_type) const  {
+  Mix_Chunk *get_sound(const unsigned char se_type) const  {
     return se_list_[se_type];
   }
 

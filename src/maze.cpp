@@ -6,6 +6,8 @@
 #include "global.hpp"
 #include "image.hpp"
 
+using namespace std;
+
 maze_state char_to_maze_state(const char c) {
   switch (c) {
     case '#':
@@ -25,13 +27,13 @@ maze_state char_to_maze_state(const char c) {
     case '=':
       return maze_state::warp_street;
     default:
-      std::cerr << "error: undefined character of maze" << '\n';
+      cerr << "error: undefined character of maze" << '\n';
       exit(EXIT_FAILURE);
   }
 }
 
 void Maze::init(const game_mode mode)  {
-  const std::string block_src =
+  const string block_src =
       "########################"
       "#..........##..........#"
       "#.##.#####.##.#####.##.#"
@@ -57,8 +59,8 @@ void Maze::init(const game_mode mode)  {
       "#......................#"
       "########################";
 
-  for (unsigned int y = 0; y < 24; ++y) {
-    for (unsigned int x = 0; x < 24; ++x) {
+  for (int y = 0; y < 24; ++y) {
+    for (int x = 0; x < 24; ++x) {
       block_[y][x] = char_to_maze_state(block_src[y * 24 + x]);
     }
   }
@@ -68,7 +70,7 @@ void Maze::init(const game_mode mode)  {
   }
 
   // '.' : enemy can reach, '#' : enemy cannot reach
-  const std::string enemy_reaches_block_p =
+  const string enemy_reaches_block_p =
       "########################"
       "#..........##..........#"
       "#.##.#####.##.#####.##.#"
@@ -99,27 +101,25 @@ void Maze::init(const game_mode mode)  {
 
   // BFS
   bool reachedp[24][24];
-  for (unsigned int y = 0; y < 24; ++y) {
-    for (unsigned int x = 0; x < 24; ++x) {
+  for ( int y = 0; y < 24; ++y) {
+    for ( int x = 0; x < 24; ++x) {
       home_distance_[y][x] = maze_max_num;
       reachedp[y][x] = enemy_reaches_block_p[y * 24 + x] == '#';
     }
   }
   const Point losed = Point{11, 12};  // Point where a losed enemy is gone.
-  const Point dirs[4] = {
-      {0, -1}, {-1, 0}, {0, 1}, {1, 0}};  // down, left, up, right
+  const Point dirs[4] = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};  // down, left, up, right
   home_distance_[losed.y][losed.x] = 1;
   reachedp[losed.y][losed.x] = true;
-  std::queue<Point> que;
+  queue<Point> que;
   que.push(losed);
   while (!que.empty()) {
     const Point p = que.front();
     que.pop();
-    const unsigned int d = home_distance_[p.y][p.x] + 1;
+    int d = home_distance_[p.y][p.x] + 1;
     for (const Point &dir : dirs) {
       const Point e = p + dir;
-      if (e.x < 0 || e.x >= 24 || e.y < 0 || e.y >= 24
-          || reachedp[e.y][e.x]) {
+      if (e.x < 0 || e.x >= 24 || e.y < 0 || e.y >= 24 || reachedp[e.y][e.x]) {
         continue;
       }
       reachedp[e.y][e.x] = true;
@@ -146,13 +146,10 @@ void Maze::draw(const unsigned int game_level) const  {
   }
 
   {
-    const SDL_Rect src[2] = {{0, 0, 20, 20},
-                             {20, 0, 20, 20}};
-    for (unsigned int y = 0; y < 24; ++y) {
-      for (unsigned int x = 0; x < 24; ++x) {
-        const SDL_Rect dst = {static_cast<Sint16>(20 * x),
-                              static_cast<Sint16>(20 * y), 20,
-                              20};
+    const SDL_Rect src[2] = {{0, 0, 20, 20},{20, 0, 20, 20}};
+    for ( int y = 0; y < 24; ++y) {
+      for ( int x = 0; x < 24; ++x) {
+        const SDL_Rect dst = {(20 * x),(20 * y), 20, 20};
         switch (block_[y][x]) {
           case maze_state::food:
           case maze_state::counter_food:
@@ -172,10 +169,9 @@ void Maze::draw(const unsigned int game_level) const  {
     }
   }
   {
-    const SDL_Rect src = {20, 20, 20,
-                          20 / 2};
-    for (unsigned int y = 0; y < 24 - 1; ++y) {
-      for (unsigned int x = 0; x < 24; ++x) {
+    const SDL_Rect src = {20, 20, 20,20 / 2};
+    for ( int y = 0; y < 24 - 1; ++y) {
+      for ( int x = 0; x < 24; ++x) {
         const maze_state block = block_[y][x];
         maze_state mut_under_block = block_[y + 1][x];
         switch (mut_under_block) {
@@ -189,15 +185,11 @@ void Maze::draw(const unsigned int game_level) const  {
             mut_under_block = maze_state::food;
             break;
           default:
-            // do nothing
             break;
         }
         const maze_state under_block = mut_under_block;
         if ((block == maze_state::block) && (under_block == maze_state::food)) {
-          const SDL_Rect dst = {static_cast<Sint16>(20 * x),
-                                static_cast<Sint16>(20 * y + 20 / 2),
-                                20,
-                                20};
+          const SDL_Rect dst = {(20 * x),(20 * y + 20 / 2),20,20};
           image_manager_->render_copy(*p_texture, src, dst);
         }
       }

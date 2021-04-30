@@ -255,7 +255,7 @@ bool Enemy::check_hit_enemy(const game_mode mode, Player &p1,
       }
       if (enemy.state == enemy_state::normal) {
         Mix_PlayChannel(se_type["beat_enemy"],
-                        mixer_manager_->get_se(se_type["beat_enemy"]), 0);
+                        mixer_manager_->get_sound(se_type["beat_enemy"]), 0);
         p1.set_score(p1.get_score() + 100);
       }
       enemy.state = enemy_state::lose;
@@ -273,7 +273,7 @@ bool Enemy::check_hit_enemy(const game_mode mode, Player &p1,
         }
         if (enemy.state == enemy_state::normal) {
           Mix_PlayChannel(se_type["beat_enemy"],
-                          mixer_manager_->get_se(se_type["beat_enemy"]), 0);
+                          mixer_manager_->get_sound(se_type["beat_enemy"]), 0);
           p2.set_score(p2.get_score() + 100);
         }
         enemy.state = enemy_state::lose;

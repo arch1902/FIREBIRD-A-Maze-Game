@@ -12,21 +12,21 @@ struct Point {
   int x;
   int y;
 
-   bool operator==(const Point &rhs) const  {
-    return x == rhs.x && y == rhs.y;
+   bool operator==(const Point &point) const  {
+    return x == point.x && y == point.y;
+  }
+  
+   bool operator!=(const Point &point) const  {
+    return x != point.x || y != point.y;
   }
 
-   bool operator!=(const Point &rhs) const  {
-    return x != rhs.x || y != rhs.y;
+   Point operator+(const Point &point) const  {
+    return Point{x + point.x, y + point.y};
   }
 
-   Point operator+(const Point &rhs) const  {
-    return Point{x + rhs.x, y + rhs.y};
-  }
-
-   void operator+=(const Point &rhs)  {
-    x += rhs.x;
-    y += rhs.y;
+   void operator+=(const Point &point)  {
+    x += point.x;
+    y += point.y;
   }
 
  public:

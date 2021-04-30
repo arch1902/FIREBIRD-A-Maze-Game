@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <time.h>
@@ -15,6 +14,8 @@
 #include "player.hpp"
 #include "wipe.hpp"
 
+using namespace std;
+
 struct RGB {
   Uint8 r;
   Uint8 g;
@@ -25,7 +26,7 @@ namespace rgb {
 const RGB black = RGB{0x00, 0x00, 0x00};
 const RGB red = RGB{0xff, 0x00, 0x00};
 const RGB white = RGB{0xff, 0xff, 0xff};
-}  // namespace rgb
+}
 
 class Pacman {
   enum class game_state {
@@ -50,15 +51,15 @@ class Pacman {
   unsigned int game_count_;
   bool debug_lose_enemy_;
 
-  std::unique_ptr<ImageManager> image_manager_;
-  std::unique_ptr<MixerManager> mixer_manager_;
-  std::unique_ptr<Wipe> wipe_;
-  std::unique_ptr<InputManager> input_manager_;
-  std::unique_ptr<Maze> maze_;
-  std::unique_ptr<Food> food_;
-  std::unique_ptr<Enemy> enemy_;
-  std::unique_ptr<Player> p1_;
-  std::unique_ptr<Player> p2_;
+  unique_ptr<ImageManager> image_manager_;
+  unique_ptr<MixerManager> mixer_manager_;
+  unique_ptr<Wipe> wipe_;
+  unique_ptr<InputManager> input_manager_;
+  unique_ptr<Maze> maze_;
+  unique_ptr<Food> food_;
+  unique_ptr<Enemy> enemy_;
+  unique_ptr<Player> p1_;
+  unique_ptr<Player> p2_;
   FontManager font_manager_;
 
   void game_title() ;
@@ -114,7 +115,7 @@ class Pacman {
   }
 
    void draw_score() const  {
-    // TODO: divide it into private functions
+    // TODO : divide it into private functions
     // Draw the plate of background.
     {
       SDL_Texture *p_texture = image_manager_->get(13);
@@ -135,8 +136,8 @@ class Pacman {
       const unsigned int x3 = x2 + 30;
       const unsigned int y3 = y2;
 
-      std::stringstream score;
-      score << "S c o r e  :  " << std::setw(6) << p1_->get_score();
+      stringstream score;
+      score << "S c o r e  :  " << setw(6) << p1_->get_score();
       draw_text(1, rgb::white, Point{x1, y1}, score.str().c_str());
 
       SDL_Texture *p_texture = image_manager_->get(0);
@@ -145,14 +146,14 @@ class Pacman {
       SDL_RenderCopy(renderer_, p_texture, &src, &dst);
       SDL_DestroyTexture(p_texture);
 
-      std::stringstream life;
+      stringstream life;
       life << "x  " << p1_->get_life();
       draw_text(1, rgb::white, Point{x3, y3}, life.str().c_str());
 
       if (game_mode_ == game_mode::multiplayer) {
         const unsigned int offset_y = 80;
-        std::stringstream score;
-        score << "S c o r e  :  " << std::setw(6) << p2_->get_score();
+        stringstream score;
+        score << "S c o r e  :  " << setw(6) << p2_->get_score();
         draw_text(1, rgb::white, Point{x1, y1 + offset_y},
                   score.str().c_str());
 
@@ -162,7 +163,7 @@ class Pacman {
         SDL_RenderCopy(renderer_, p_texture, &src, &dst);
         SDL_DestroyTexture(p_texture);
 
-        std::stringstream life;
+        stringstream life;
         life << "x  " << p2_->get_life();
         draw_text(1, rgb::white, Point{x3, y3 + offset_y},
                   life.str().c_str());
@@ -238,9 +239,9 @@ class Pacman {
         frame_rate = 1000.0 / interval;
       }
 
-      std::stringstream ss;
-      ss << "FrameRate[" << std::setprecision(2)
-         << std::setiosflags(std::ios::fixed) << frame_rate << "]";
+      stringstream ss;
+      ss << "FrameRate[" << setprecision(2)
+         << setiosflags(ios::fixed) << frame_rate << "]";
       draw_text(1, rgb::white, Point{480 + 15, 16},
                 ss.str().c_str());
     }
@@ -264,7 +265,7 @@ class Pacman {
         SDL_CreateRGBSurface(SDL_SWSURFACE, 640, 480, 32,
                              rmask, gmask, bmask, amask);
     if (trans_surface == nullptr) {
-      std::cerr << "CreateRGBSurface failed: " << SDL_GetError() << '\n';
+      cerr << "CreateRGBSurface failed: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
     }
     SDL_Texture *trans_texture =
@@ -275,9 +276,9 @@ class Pacman {
     SDL_DestroyTexture(trans_texture);
     if (blink_count_ < 30) {
       draw_text(0, rgb::white, Point{165, 170}, "P a u s e");
-      ++blink_count_;
+      blink_count_++;
     } else if (blink_count_ < 60) {
-      ++blink_count_;
+      blink_count_++;
     } else {
       blink_count_ = 0;
     }
@@ -295,7 +296,7 @@ class Pacman {
         game_count_(0),
         debug_lose_enemy_(false) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-      std::cerr << "error: " << SDL_GetError() << '\n';
+      cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
     }
 
@@ -303,38 +304,33 @@ class Pacman {
     if (fullscreen_mode_) {
       flags |= SDL_WINDOW_FULLSCREEN;
     }
-    window_ = SDL_CreateWindow("pacman-sdl", SDL_WINDOWPOS_UNDEFINED,
-                               SDL_WINDOWPOS_UNDEFINED, 640,
-                               480, flags);
+    window_ = SDL_CreateWindow("pacman-sdl", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, 640, 480, flags);
     if (window_ == nullptr) {
-      std::cerr << "error: " << SDL_GetError() << '\n';
+      cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
     }
 
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
     if (renderer_ == nullptr) {
-      std::cerr << "error: " << SDL_GetError() << '\n';
+      cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
     }
 
-    image_manager_ = std::make_unique<ImageManager>(renderer_);
-    mixer_manager_ = std::make_unique<MixerManager>();
-    input_manager_ = std::make_unique<InputManager>();
-    wipe_ = std::make_unique<Wipe>(renderer_);
-    maze_ = std::make_unique<Maze>(renderer_, image_manager_.get());
-    food_ = std::make_unique<Food>(image_manager_.get(), mixer_manager_.get());
-    enemy_ =
-        std::make_unique<Enemy>(image_manager_.get(), mixer_manager_.get());
-    p1_ = std::make_unique<Player>(0, image_manager_.get(),
-                                   input_manager_.get());
-    p2_ = std::make_unique<Player>(1, image_manager_.get(),
-                                   input_manager_.get());
+    image_manager_ = make_unique<ImageManager>(renderer_);
+    mixer_manager_ = make_unique<MixerManager>();
+    input_manager_ = make_unique<InputManager>();
+    wipe_ = make_unique<Wipe>(renderer_);
+    maze_ = make_unique<Maze>(renderer_, image_manager_.get());
+    food_ = make_unique<Food>(image_manager_.get(), mixer_manager_.get());
+    enemy_ = make_unique<Enemy>(image_manager_.get(), mixer_manager_.get());
+    p1_ = make_unique<Player>(0, image_manager_.get(), input_manager_.get());
+    p2_ = make_unique<Player>(1, image_manager_.get(), input_manager_.get());
 
     SDL_ShowCursor(SDL_DISABLE);
   }
 
    void run()  {
-    for (;;) {
+    while(true) {
       input_manager_->update();
       switch (game_state_) {
         case game_state::title:
@@ -361,9 +357,6 @@ class Pacman {
       }
       if (!poll_event()) {
         return;
-      }
-      if (debug_mode_) {
-        draw_fps();
       }
       SDL_RenderPresent(renderer_);
       wait_game();

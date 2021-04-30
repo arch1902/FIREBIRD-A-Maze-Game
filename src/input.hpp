@@ -14,10 +14,10 @@ class InputManager {
   InputManager()  {}
 
    void update()  {
-    constexpr unsigned int num_devices_ = 2;
+    int num_devices_ = 2;
     bool new_press_key[num_devices_][5];
-    for (unsigned int i = 0; i < num_devices_; ++i) {
-      for (unsigned int j = 0; j < 5; ++j) {
+    for (int i = 0; i < num_devices_; ++i) {
+      for (int j = 0; j < 5; ++j) {
         new_press_key[i][j] = false;
       }
     }
@@ -46,21 +46,19 @@ class InputManager {
     new_press_key[0][4] = state[SDL_SCANCODE_SPACE] == SDL_PRESSED;
     new_press_key[1][4] = state[SDL_SCANCODE_SPACE] == SDL_PRESSED;
 
-    for (unsigned int i = 0; i < num_devices_; ++i) {
-      for (unsigned int j = 0; j < 5; ++j) {
+    for (int i = 0; i < num_devices_; ++i) {
+      for (int j = 0; j < 5; ++j) {
         edge_key_[i][j] = !press_key_[i][j] && new_press_key[i][j];
         press_key_[i][j] = new_press_key[i][j];
       }
     }
   }
 
-   bool edge_key_p(const unsigned char player_type,
-                         const unsigned char button) const  {
+   bool edge_key_p(int player_type, int button) const  {
     return edge_key_[player_type][button];
   }
 
-   bool press_key_p(const unsigned char player_type,
-                          const unsigned char button) const  {
+   bool press_key_p(int player_type, int button) const  {
     return press_key_[player_type][button];
   }
 

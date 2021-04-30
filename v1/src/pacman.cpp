@@ -161,7 +161,7 @@ void Pacman::game_start()  {
       // TODO: Is it correct?
       if (p1_->get_life() == 2 && p2_->get_life() == 2) {
         Mix_PlayChannel(se_type["beginning"],
-                        mixer_manager_->get_se(se_type["beginning"]),
+                        mixer_manager_->get_sound(se_type["beginning"]),
                         0);
       }
       wipe_->set_wipe_in();
@@ -270,7 +270,7 @@ void Pacman::game_miss()  {
 
   if (game_count_ == 0) {
     Mix_HaltChannel(-1);
-    Mix_PlayChannel(-1, mixer_manager_->get_se(se_type["death"]), 0);
+    Mix_PlayChannel(-1, mixer_manager_->get_sound(se_type["death"]), 0);
     wipe_->set_wipe_out();
     if (p1_->get_life() == 0 || p2_->get_life() == 0) {
       wipe_->draw(screen_specifications["width"]);
@@ -398,7 +398,7 @@ void Pacman::game_over()  {
           const unsigned int p1_score = p1_->get_score();
           const unsigned int p2_score = p2_->get_score();
           if (p1_score > p2_score) {
-            ss << "1 P  W I N  " << p1_score;
+            ss << "Player 1  W I N  " << p1_score;
             draw_text(font_size["x36"], rgb::black, Point{170, 240},
                       ss.str().c_str());
           } else if (p1_score < p2_score) {
