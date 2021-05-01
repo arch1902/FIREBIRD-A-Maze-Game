@@ -15,7 +15,7 @@
 #include "wipe.hpp"
 
 struct RGB {
-  Uint8 r;
+  Uint8 r; // 8 bit number 0-255
   Uint8 g;
   Uint8 b;
 };
@@ -24,7 +24,7 @@ namespace rgb {
 const RGB black = RGB{0x00, 0x00, 0x00};
 const RGB red = RGB{0xff, 0x00, 0x00};
 const RGB white = RGB{0xff, 0xff, 0xff};
-}  // namespace rgb
+};  // namespace rgb
 
 class Pacman {
   enum class game_state {
@@ -80,8 +80,7 @@ class Pacman {
     }
   }
 
-  void draw_text(const unsigned char font_size, const RGB &rgb,
-                        const Point &p, const char *str) const noexcept {
+  void draw_text(const unsigned char font_size, const RGB &rgb,const Point &p, const char *str) const noexcept {
     const SDL_Color color = {rgb.r, rgb.g, rgb.b, 255};
     SDL_Surface *font_surface =
         TTF_RenderUTF8_Blended(font_manager_.get(font_size), str, color);
