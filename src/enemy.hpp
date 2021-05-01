@@ -46,7 +46,7 @@ class Enemy {
     }
   }
 
-  void move_normal_enemy(Enemy_data &enemy, const Maze &maze, const Player &p1, const Player &p2) ;
+  void move_normal_enemy(Enemy_data &enemy, const Maze &maze,int game_level, const Player &p1, const Player &p2) ;
 
   void move_lose_enemy(Enemy_data &enemy, const Maze &maze, const Player &p1, const Player &p2) ;
 
@@ -101,12 +101,12 @@ class Enemy {
     SDL_DestroyTexture(mon_run_texture);
   }
 
-   void move(const bool debug_lose_enemy, const Maze &maze, const Player &p1, const Player &p2)  {
+   void move( const Maze &maze,int game_level, const Player &p1, const Player &p2)  {
     for (auto &enemy : enemies_) {
-      if (debug_lose_enemy || enemy.state == enemy_state::lose) {
+      if ( enemy.state == enemy_state::lose) {
         move_lose_enemy(enemy, maze, p1, p2);
       } else {
-        move_normal_enemy(enemy, maze, p1, p2);
+        move_normal_enemy(enemy, maze,game_level, p1, p2);
       }
     }
   }

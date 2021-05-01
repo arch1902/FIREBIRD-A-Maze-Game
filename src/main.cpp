@@ -6,9 +6,8 @@
 
 using namespace std;
 
-pair<bool, bool> parse_options(const int argc, char **argv)  {
+bool parse_options(const int argc, char **argv)  {
   bool fullscreen_mode = false;
-  bool debug_mode = false;
   opterr = 0;
   const option long_options[] = {
       {"fullscreen", no_argument, nullptr, 'f'},
@@ -51,13 +50,13 @@ Options:
     }
   }
 
-  return make_pair(fullscreen_mode, false);
+  return fullscreen_mode;
 }
 
 int main(int argc, char **argv) {
 
-  pair<bool, bool> options = parse_options(argc, argv);
-  Pacman pacman(options.first, options.second);
+  bool is_fullscreen = parse_options(argc, argv);
+  Pacman pacman(is_fullscreen);
   pacman.run();
   exit(EXIT_SUCCESS);
 }

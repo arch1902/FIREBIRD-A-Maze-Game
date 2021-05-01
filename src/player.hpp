@@ -73,7 +73,7 @@ class Player {
     }
   }
 
-   void move(const Maze &maze, const game_mode mode)  {
+   void move(const Maze &maze, const game_mode mode,int game_level)  {
     if (type_ == 1 && mode != game_mode::multiplayer) {
       return;
     }
@@ -85,7 +85,12 @@ class Player {
         anime_count_ = 1 - anime_count_;
         anime_weight_ = 0;
       }
-      int move_value = 2;
+      int move_value;
+      if(game_level==1) move_value=2;
+      else if (game_level==2) move_value=4;
+      else if (game_level==3) move_value=5;
+      else move_value=10;
+      
       if (dst_pos.x > pos_.x) pos_.x += move_value;
       else if (dst_pos.x < pos_.x) pos_.x -= move_value;
       

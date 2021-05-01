@@ -40,7 +40,6 @@ class Pacman {
   };
 
   const bool fullscreen_mode_;
-  const bool debug_mode_;
 
   SDL_Window *window_;
   SDL_Renderer *renderer_;
@@ -49,7 +48,6 @@ class Pacman {
   game_mode game_mode_;
   unsigned int blink_count_;
   unsigned int game_count_;
-  bool debug_lose_enemy_;
 
   unique_ptr<ImageManager> image_manager_;
   unique_ptr<MixerManager> mixer_manager_;
@@ -285,16 +283,14 @@ class Pacman {
   }
 
  public:
-  Pacman(const bool fullscreen_mode, const bool debug_mode) 
+  Pacman(const bool fullscreen_mode) 
       : fullscreen_mode_(fullscreen_mode),
-        debug_mode_(debug_mode),
         window_(nullptr),
         renderer_(nullptr),
         game_state_(game_state::title),
         game_mode_(game_mode::single),
         blink_count_(0),
-        game_count_(0),
-        debug_lose_enemy_(false) {
+        game_count_(0) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
       cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);

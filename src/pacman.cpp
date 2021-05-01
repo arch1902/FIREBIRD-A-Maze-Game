@@ -202,9 +202,10 @@ void Pacman::play_game()  {
   p1_->draw(game_mode_);
   p2_->draw(game_mode_);
   draw_score();
-  enemy_->move(debug_lose_enemy_, *maze_, *p1_, *p2_);
-  p1_->move(*maze_, game_mode_);
-  p2_->move(*maze_, game_mode_);
+  enemy_->move( *maze_,game_level_, *p1_, *p2_);
+  cout<<game_level_<<endl;
+  p1_->move(*maze_, game_mode_,game_level_);
+  p2_->move(*maze_, game_mode_,game_level_);
   if (p1_->get_power_mode()) {
     p1_->set_power_mode(p1_->get_power_mode() - 1);
   }
