@@ -139,6 +139,13 @@ void Pacman::game_title()  {
           game_count_ = 0;
           game_state_ = game_state::start;
           game_level_ = 1;
+          isOnline = true;
+          char ip[20];
+          if(isOnline{
+            //127.0.0.1
+            std::cin.getline(ip,20);
+            net=new network(ip);
+          )
 
           srand((unsigned int)time(nullptr));
 

@@ -6,6 +6,8 @@
 #include "maze.hpp"
 
 class Player {
+  int id;
+  bool isready;
   const unsigned char type_;
   const ImageManager *image_manager_;
   const InputManager *input_manager_;
@@ -35,6 +37,7 @@ class Player {
         dir_ = 1;
         anime_count_ = 0;
         anime_weight_ = 0;
+        id = -1;
         return;
       }
       case 1: {
@@ -176,6 +179,18 @@ class Player {
    void set_power_mode(const unsigned int power_mode)  {
     power_mode_ = power_mode;
   }
+
+  void setId(int i){
+    isready=true;
+    id=i;
+  }
+  int getId(){
+    return id;
+  };
+  bool isReady(){
+    return isready;
+  };
+
 
   ~Player()  {}
 };

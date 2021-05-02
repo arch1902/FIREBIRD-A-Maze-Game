@@ -40,6 +40,8 @@ class Pacman {
   };
 
   const bool fullscreen_mode_;
+  bool isOnline;
+  network* net;
 
   SDL_Window *window_;
   SDL_Renderer *renderer_;
@@ -360,6 +362,7 @@ class Pacman {
   }
 
   ~Pacman()  {
+    delete net;
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);
     atexit(SDL_Quit);
