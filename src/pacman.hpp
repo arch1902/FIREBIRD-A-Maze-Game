@@ -13,6 +13,8 @@
 #include "mixer.hpp"
 #include "player.hpp"
 #include "wipe.hpp"
+#include "player2.hpp"
+#include "network.hpp"
 
 using namespace std;
 
@@ -59,7 +61,8 @@ class Pacman {
   unique_ptr<Food> food_;
   unique_ptr<Enemy> enemy_;
   unique_ptr<Player> p1_;
-  unique_ptr<Player> p2_;
+  unique_ptr<player2> p2_;
+
   FontManager font_manager_;
 
   void game_title() ;
@@ -322,7 +325,7 @@ class Pacman {
     food_ = make_unique<Food>(image_manager_.get(), mixer_manager_.get());
     enemy_ = make_unique<Enemy>(image_manager_.get(), mixer_manager_.get());
     p1_ = make_unique<Player>(0, image_manager_.get(), input_manager_.get());
-    p2_ = make_unique<Player>(1, image_manager_.get(), input_manager_.get());
+    p2_ = make_unique<player2>(1, image_manager_.get(), input_manager_.get());
 
     SDL_ShowCursor(SDL_DISABLE);
   }

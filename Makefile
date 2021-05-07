@@ -5,7 +5,7 @@ SRC_DIR = src
 OBJ_DIR = build
 CXX = g++
 CXXFLAGS = -std=c++17 -O2 -Wall -Wextra -pedantic -Wformat=2 -Wstrict-aliasing=2 -MMD
-LDFLAGS = $(shell sdl2-config --cflags --libs) -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm
+LDFLAGS = $(shell sdl2-config --cflags --libs) -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2 -lSDL_net  -lm
 ifeq ($(shell uname -s),Darwin)
 	LDFLAGS += -I/usr/local/include
 endif
@@ -20,7 +20,7 @@ $(TARGET): $(OBJS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< $(LDFLAGS) -o $@
+	$(CXX) $(CXXFLAGS) -c $< $(LDFLAGS) -o $@ 
 
 clean:
 	-rm -rf $(OBJ_DIR) $(TARGET)

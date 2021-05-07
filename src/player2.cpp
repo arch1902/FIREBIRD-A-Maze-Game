@@ -1,29 +1,9 @@
-#pragma once
+#include "player2.hpp"
 
-#include "global.hpp"
-#include "image.hpp"
-#include "input.hpp"
-#include "maze.hpp"
 
-class Player {
-  bool isready;
-  int type_;
-  const ImageManager *image_manager_;
-  const InputManager *input_manager_;
-  Point pos_;
-  Point block_;
-  Point next_block_;
-  unsigned char dir_;           // 0: down, 1: left, 2: up, 3: right
-  unsigned char anime_count_;   // 0 or 1
-  unsigned char anime_weight_;  // max value is 4
-  int life_;
-  unsigned int score_;
-  bool damaged_p_;
-  unsigned int power_mode_;  // 0: not power mode, not 0: power mode
-
- public:
-  Player(const unsigned char player_type, const ImageManager *image_manager,const InputManager *input_manager) 
-      : type_(player_type),
+player2(std::vector<int> f,const unsigned char player_type, const ImageManager *image_manager,const InputManager *input_manager) 
+      : 
+        type_(player_type),
         image_manager_(image_manager),
         input_manager_(input_manager) {}
 
@@ -36,6 +16,7 @@ class Player {
         dir_ = 1;
         anime_count_ = 0;
         anime_weight_ = 0;
+        id = -1;
         return;
       }
       case 1: {
@@ -182,20 +163,13 @@ class Player {
     power_mode_ = power_mode;
   }
 
-  void setId(int i) {
+  void setId(int i){
     isready=true;
-    type_=i;
+    id=i;
   }
   int getId(){
-    return type_;
-  }
+    return id;
+  };
   bool isReady(){
     return isready;
-  }
-  int getCurframe(){
-    return 0;
-  }
-
-
-  ~Player()  {}
-};
+  };

@@ -12,6 +12,8 @@
 #include "mixer.hpp"
 #include "player.hpp"
 #include "wipe.hpp"
+#include "player2.hpp"
+#include "network.hpp"
 
 using namespace std;
 
@@ -141,11 +143,12 @@ void Pacman::game_title()  {
           game_level_ = 1;
           isOnline = true;
           char ip[20];
-          if(isOnline{
+          if(isOnline){
             //127.0.0.1
             std::cin.getline(ip,20);
             net=new network(ip);
-          )
+
+          }
 
           srand((unsigned int)time(nullptr));
 
@@ -231,6 +234,13 @@ void Pacman::play_game()  {
 
   if (input_manager_->edge_key_p(0, 4)) {
     game_state_ = game_state::pause;
+  }
+
+  if(isOnline){
+    //127.0.0.1
+    net->send(p1_);
+    net->recv(p2_,p1_,)
+
   }
 
 }

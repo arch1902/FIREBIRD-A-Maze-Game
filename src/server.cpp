@@ -54,8 +54,8 @@ int main(int argc , char** argv){
             }
             SDLNet_TCP_Send(tmpsocket,tmp,strlen(tmp)+1);
         }
-        //check for incoming Data
 
+        //check for incoming Data
         while(SDLNet_CheckSockets(sockets,0)>0){
             for(int i=0;i<socketvector.size();i++){
 
@@ -98,7 +98,7 @@ int main(int argc , char** argv){
                                 SDLNet_TCP_Send(socketvector[k].socket,tmp,strlen(tmp)+1);
                                 break;
                             }
-                        }
+                        } 
                     }
                 }
 
@@ -129,7 +129,7 @@ int main(int argc , char** argv){
     }
 
     SDLNet_FreeSocketSet(sockets);
-    SDLNet_TCP_Close(server);
+    SDLNet_TCP_Close(server);  
     SDLNet_Quit();
     SDL_Quit();
 }
