@@ -33,20 +33,24 @@ void network::send(Player* p){
         int len = strlen(tmp)+1;
         while(size<len){
             size+=SDLNet_TCP_Send(connection,tmp+size,len-size);
-        }            
+        }  
+        cout<<"sent\n";          
     }
 }
 void network::recv(Player* p2,Player* p1){
+    cout<<"FF "<<SDLNet_CheckSockets(server,0)<<SDLNet_SocketReady(connection)<<endl;
     while(SDLNet_CheckSockets(server,0)>0 && SDLNet_SocketReady(connection)){
         int offset = 0;
         do{
+            //cout<<"here: "<<offset<<" "<<tmp[strlen(tmp)-1]<<endl;
             offset+=SDLNet_TCP_Recv(connection,tmp+offset,1400);
             if(offset<=0)
                 return;
             
-        }while(tmp[strlen(tmp)-1]!='\0');
+        }while(tmp[strlen(tmp)-1]!='\n');
         int type,id;
         sscanf(tmp,"%d %d",&type,&id);
+        cout<<"type,id: "<<type<<","<<id<<endl;
         if(type==0){
             p1->setId(id);
         }else if (type==1){
@@ -60,6 +64,7 @@ void network::recv(Player* p2,Player* p1){
             p2->get_dir(),p2->get_anc(),p2->get_anw(),
             p2->get_life(),p2->get_score(),p2->get_damaged(),
             p2->get_power_mode());
+            cout<<"recv\n"; 
             break;
 
         }

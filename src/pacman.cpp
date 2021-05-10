@@ -142,10 +142,11 @@ void Pacman::game_title()  {
           game_level_ = 1;
           isOnline = true;
           char ip[20];
-          if(isOnline){
+          if(isOnline && game_mode_==game_mode::multiplayer){
             //127.0.0.1
             std::cin.getline(ip,20);
-            net=new network(ip);
+            cout<<"Playing on "<<ip<<endl;
+            net = new network(ip);
 
           }
 
@@ -205,6 +206,7 @@ void Pacman::game_start()  {
 }
 
 void Pacman::play_game()  {
+  //cout<<"playing\n";
   maze_->draw(game_level_);
   food_->draw();
   enemy_->draw();
@@ -235,10 +237,13 @@ void Pacman::play_game()  {
     game_state_ = game_state::pause;
   }
 
-  if(isOnline){
+  if(isOnline && game_mode_==game_mode::multiplayer){
     //127.0.0.1
+    cout<<"online\n";
     net->send(p1_.get());
+    cout<<"here1\n";
     net->recv(p2_.get(),p1_.get());
+    cout<<"here2\n";
 
   }
 

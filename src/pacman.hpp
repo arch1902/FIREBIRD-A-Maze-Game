@@ -333,42 +333,42 @@ class Pacman {
    void run()  {
     while(true) {
       input_manager_->update();
-      cout<<"hello1\n";
+      //cout<<"hello1\n";
     
       switch (game_state_) {
         case game_state::title:
-          cout<<"1\n";
+          //cout<<"1\n";
           game_title();
           break;
         case game_state::start:
-          cout<<"2\n";
+          //cout<<"2\n";
           game_start();
           break;
         case game_state::playing:
-          cout<<"3\n";
+          //cout<<"3\n";
           play_game();
           break;
         case game_state::clear:
-          cout<<"4\n";
+          //cout<<"4\n";
           game_clear();
           break;
         case game_state::miss:
-          cout<<"5\n";
+          //cout<<"5\n";
           game_miss();
           break;
         case game_state::gameover:
-          cout<<"6\n";
+          //cout<<"6\n";
           game_over();
           break;
         case game_state::pause:
-          cout<<"7\n";
+          //cout<<"7\n";
           game_pause();
           break;
       }
       if (!poll_event()) {
         return;
       }
-      cout<<"hello2\n";
+      //cout<<"hello2\n";
       SDL_RenderPresent(renderer_);
       wait_game();
     }

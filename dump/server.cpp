@@ -37,6 +37,7 @@ int main(int argc , char** argv){
     TCPsocket server = SDLNet_TCP_Open(&ip);
 
     while(running){
+        //cout<<"hello\n";
         while(SDL_PollEvent(&event))
             if(event.type==SDL_QUIT || (event.type==SDL_KEYDOWN &&
             event.key.keysym.sym==SDLK_ESCAPE))
