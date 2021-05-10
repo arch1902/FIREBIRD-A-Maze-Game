@@ -8,6 +8,7 @@
 class Player {
   bool isready;
   int type_;
+  int curframe;
   const ImageManager *image_manager_;
   const InputManager *input_manager_;
   Point pos_;
@@ -193,7 +194,7 @@ class Player {
     return isready;
   }
   int getCurframe(){
-    return 0;
+    return curframe;
   }
 
 

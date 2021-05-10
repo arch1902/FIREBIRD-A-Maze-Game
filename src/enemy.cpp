@@ -8,6 +8,7 @@
 #include "mixer.hpp"
 #include "player.hpp"
 
+
 void Enemy::move_normal_enemy(Enemy_data &enemy,const Maze &maze,int game_level,const Player &p1, const Player &p2)  {
   const Point dst_pos = {enemy.next_block.x * 20, enemy.next_block.y * 20};
   if (enemy.pos != dst_pos) {

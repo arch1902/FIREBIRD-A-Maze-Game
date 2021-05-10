@@ -12,7 +12,6 @@
 #include "mixer.hpp"
 #include "player.hpp"
 #include "wipe.hpp"
-#include "player2.hpp"
 #include "network.hpp"
 
 using namespace std;
@@ -238,8 +237,8 @@ void Pacman::play_game()  {
 
   if(isOnline){
     //127.0.0.1
-    net->send(p1_);
-    net->recv(p2_,p1_,)
+    net->send(p1_.get());
+    net->recv(p2_.get(),p1_.get());
 
   }
 
@@ -303,6 +302,7 @@ void Pacman::game_miss()  {
   } else {
     wipe_->draw(480);
   }
+
 
   Player *p = p1_->get_damaged() ? p1_.get() : p2_.get();
   const Point pos = p->get_pos();

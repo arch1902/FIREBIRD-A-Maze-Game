@@ -13,7 +13,7 @@
 #include "mixer.hpp"
 #include "player.hpp"
 #include "wipe.hpp"
-#include "player2.hpp"
+
 #include "network.hpp"
 
 using namespace std;
@@ -61,7 +61,7 @@ class Pacman {
   unique_ptr<Food> food_;
   unique_ptr<Enemy> enemy_;
   unique_ptr<Player> p1_;
-  unique_ptr<player2> p2_;
+  unique_ptr<Player> p2_;
 
   FontManager font_manager_;
 
@@ -325,7 +325,7 @@ class Pacman {
     food_ = make_unique<Food>(image_manager_.get(), mixer_manager_.get());
     enemy_ = make_unique<Enemy>(image_manager_.get(), mixer_manager_.get());
     p1_ = make_unique<Player>(0, image_manager_.get(), input_manager_.get());
-    p2_ = make_unique<player2>(1, image_manager_.get(), input_manager_.get());
+    p2_ = make_unique<Player>(1, image_manager_.get(), input_manager_.get());
 
     SDL_ShowCursor(SDL_DISABLE);
   }
@@ -333,32 +333,42 @@ class Pacman {
    void run()  {
     while(true) {
       input_manager_->update();
+      cout<<"hello1\n";
+    
       switch (game_state_) {
         case game_state::title:
+          cout<<"1\n";
           game_title();
           break;
         case game_state::start:
+          cout<<"2\n";
           game_start();
           break;
         case game_state::playing:
+          cout<<"3\n";
           play_game();
           break;
         case game_state::clear:
+          cout<<"4\n";
           game_clear();
           break;
         case game_state::miss:
+          cout<<"5\n";
           game_miss();
           break;
         case game_state::gameover:
+          cout<<"6\n";
           game_over();
           break;
         case game_state::pause:
+          cout<<"7\n";
           game_pause();
           break;
       }
       if (!poll_event()) {
         return;
       }
+      cout<<"hello2\n";
       SDL_RenderPresent(renderer_);
       wait_game();
     }
