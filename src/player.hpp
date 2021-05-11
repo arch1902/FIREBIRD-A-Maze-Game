@@ -158,10 +158,19 @@ class Player {
    void set_pos(const Point &&p)  { pos_ = p; }
 
    Point get_block() const  { return block_; }
+   void set_block(const Point &&p)  { block_ = p; }
+
    Point get_nextblock() const  { return next_block_; }
+   void set_nextblock(const Point &&p)  { next_block_ = p; }
+
    int get_dir(){ return dir_;}
+   void set_dir(int d){ dir_=d;}
+
    int get_anc(){ return anime_count_;}
+   void set_anc(int anc){ anime_count_=anc;}
+
    int get_anw(){ return anime_weight_;}
+   void set_anw(int anw){ anime_weight_=anw;}
 
    int get_life() const  { return life_; }
 

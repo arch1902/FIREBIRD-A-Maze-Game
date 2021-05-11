@@ -25,6 +25,7 @@ void network::send(Player* p){
         sprintf(tmp,"1 %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d \n",
                     p->getId(),p->getCurframe(),
                     p->get_pos().x,p->get_pos().y,
+                    p->get_block().x,p->get_block().y,
                     p->get_nextblock().x,p->get_nextblock().y,
                     p->get_dir(),p->get_anc(),p->get_anw(),
                     p->get_life(),p->get_score(),p->get_damaged(),
@@ -34,7 +35,7 @@ void network::send(Player* p){
         while(size<len){
             size+=SDLNet_TCP_Send(connection,tmp+size,len-size);
         }  
-        cout<<"sent\n";          
+        cout<<"sent "<<tmp<<"\n";          
     }
 }
 void network::recv(Player* p2,Player* p1){
@@ -49,21 +50,32 @@ void network::recv(Player* p2,Player* p1){
             
         }while(tmp[strlen(tmp)-1]!='\n');
         int type,id;
+        cout<<"Received "<<tmp<<endl;
         sscanf(tmp,"%d %d",&type,&id);
         cout<<"type,id: "<<type<<","<<id<<endl;
         if(type==0){
             p1->setId(id);
         }else if (type==1){
             
-            int tmp2;
-            // 1 id curframe pos block nextblock dir anc anw life score damages powermode
+            int tmp2,curframe,posx,posy,blkx,blky,nxtblkx,nxtblky,dir,anc,anw,life,score,damaged,powermode;
+            // 1 id curframe pos block nextblock dir anc anw life score damaged powermode
             sscanf(tmp,"1 %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d \n",
-            &tmp2,p2->getCurframe(),p2->get_pos().x,p2->get_pos().y,
-            p2->get_block().x,p2->get_block().y,
-            p2->get_nextblock().x,p2->get_nextblock().y,
-            p2->get_dir(),p2->get_anc(),p2->get_anw(),
-            p2->get_life(),p2->get_score(),p2->get_damaged(),
-            p2->get_power_mode());
+            &tmp2,&curframe,&posx,&posy,
+            &blkx,&blky,
+            &nxtblkx,&nxtblky,
+            &dir,&anc,&anw,
+            &life,&score,&damaged,
+            &powermode);
+            p2->set_pos(Point{posx,posy});
+            p2->set_block(Point{blkx,blky});
+            p2->set_nextblock(Point{nxtblkx,nxtblky});
+            p2->set_dir(dir);
+            p2->set_anc(anc);
+            p2->set_anw(anw);
+            p2->set_life(life);
+            p2->set_score(score);
+            p2->set_damaged(damaged);
+            p2->set_power_mode(powermode);
             cout<<"recv\n"; 
             break;
 
