@@ -87,12 +87,7 @@ string generator(){
         //cout<<j<<endl;
         j+=1;
     }
-    // maze[12][1] = "=";
-    // maze[12][2] = "=";
-    // maze[12][3] = "=";
-    // maze[12][22] = "=";
-    // maze[12][21] = "=";
-    // maze[12][20] = "=";    
+ 
     int  q = 0;
     while(q<4){
         int x = rand()%22 + 1;
@@ -103,6 +98,14 @@ string generator(){
         maze[x][y] = "C";
         q=q+1;        
     }
+    maze[12][1] = "=";
+    maze[12][2] = "=";
+    maze[12][3] = "=";
+    maze[12][22] = "=";
+    maze[12][21] = "=";
+    maze[12][20] = "=";  
+    maze[12][0] = "L";
+    maze[12][23] = "R"; 
     maze[18][9] = "P";
     maze[10][11] = ".";
     maze[10][12] = ".";
@@ -112,8 +115,8 @@ string generator(){
     maze[12][12] = "E";
     maze[12][10] = "E";
     maze[12][13] = "E";
-    maze[12][0] = "#";
-    maze[12][23] = "#";
+    // maze[12][0] = "#";
+    // maze[12][23] = "#";
     string out;
     for (auto j: maze){
         for (auto i :j){
