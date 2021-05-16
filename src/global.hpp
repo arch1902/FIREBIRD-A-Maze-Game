@@ -9,8 +9,6 @@ enum class game_mode {
   multiplayer,
 };
 
-static std::string network_state;
-
 struct Point {
   int x;
   int y;

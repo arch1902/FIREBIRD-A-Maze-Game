@@ -12,6 +12,8 @@
 #include "mixer.hpp"
 #include "player.hpp"
 #include "wipe.hpp"
+extern string network_state;
+extern int socket_;
 
 using namespace std;
 
@@ -123,8 +125,7 @@ void Pacman::game_title()  {
         // initialize globals
         if (wipe_->update()) {
           cout<<"here1"<<endl;
-          cout<<network_state_<<endl;
-          maze_->init(game_mode_,network_state_,socket_);
+          maze_->init(game_mode_);
           cout<<"here2"<<endl;
           food_->init(*maze_);
           enemy_->init();

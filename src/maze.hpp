@@ -2,6 +2,9 @@
 
 #include "global.hpp"
 #include "image.hpp"
+extern string network_state;
+extern int socket_;
+
 
 enum class maze_state {
   block, // #
@@ -25,7 +28,7 @@ class Maze {
   Maze(SDL_Renderer *renderer, const ImageManager *image_manager) 
       : renderer_(renderer), image_manager_(image_manager) {}
 
-  void init(const game_mode mode,const string network, int n) ;
+  void init(const game_mode mode) ;
 
   void draw(const unsigned int game_level) const ;
 

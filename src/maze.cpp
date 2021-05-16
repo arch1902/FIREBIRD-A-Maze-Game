@@ -8,6 +8,8 @@
 #include "mazegenerator.hpp"
 #include "server.hpp"
 #include "client.hpp"
+extern string network_state;
+extern int socket_;
 
 using namespace std;
 
@@ -35,22 +37,41 @@ maze_state char_to_maze_state(const char c) {
   }
 }
 
-void Maze::init(const game_mode mode, const string network,int n)  {
+void Maze::init(const game_mode mode)  {
   cout<<"1"<<endl;
   string s;
+  // if (mode == game_mode::multiplayer){
+  //   cout<<"2"<<endl;
+  //   cout<<network<<endl;
+  //   if (network == "server"){
+  //     cout<<"3"<<endl;
+  //     s = generator();
+  //     send_from_server(s,n);
+  //     string in = receive_in_server(n);
+  //     cout<<"Sent"<<endl;
+  //   }else{
+  //     cout<<"5"<<endl;
+  //     send_from_client("Aane do!",n);
+  //     s = receive_in_client(n);
+  //     cout<<"Received\n"<<s<<endl;
+  //   }
+  // }else{
+  //   cout<<"6"<<endl;
+  //   s = generator();
+  // }
   if (mode == game_mode::multiplayer){
     cout<<"2"<<endl;
-    cout<<network<<endl;
-    if (network == "server"){
+    cout<<network_state<<endl;
+    if (network_state == "server"){
       cout<<"3"<<endl;
       s = generator();
-      send_from_server(s,n);
-      string in = receive_in_server(n);
+      send_from_server(s,socket_);
+      string in = receive_in_server(socket_);
       cout<<"Sent"<<endl;
     }else{
       cout<<"5"<<endl;
-      send_from_client("Aane do!",n);
-      s = receive_in_client(n);
+      send_from_client("Aane do!",socket_);
+      s = receive_in_client(socket_);
       cout<<"Received\n"<<s<<endl;
     }
   }else{

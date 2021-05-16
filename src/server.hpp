@@ -55,9 +55,9 @@ static int start_server(){
 
 static void send_from_server(string s,int n){
 	//cout<<"Server trying to send :"<<s<<endl;
-	cout<<"Server Socket :" << new_socket<<endl;
+	//cout<<"Server Socket :" << new_socket<<endl;
 	const char * msg = s.c_str();
-	cout<<send(n,msg,strlen(msg),0);
+	cout<<send(n,msg,strlen(msg),0)<<endl;
 	//cout<<"Sent!"<<endl;
 }
 

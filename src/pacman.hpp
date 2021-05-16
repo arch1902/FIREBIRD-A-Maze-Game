@@ -44,8 +44,6 @@ class Pacman {
   };
 
   const bool fullscreen_mode_;
-  const string network_state_;
-  int socket_;
 
   SDL_Window *window_;
   SDL_Renderer *renderer_;
@@ -289,10 +287,8 @@ class Pacman {
   }
 
  public:
-  Pacman(const bool fullscreen_mode, const string network_mode, int n) 
+  Pacman(const bool fullscreen_mode) 
       : fullscreen_mode_(fullscreen_mode),
-        network_state_(network_mode),
-        socket_(n),
         window_(nullptr),
         renderer_(nullptr),
         game_state_(game_state::title),

@@ -3,12 +3,16 @@
 #include <SDL2/SDL_mixer.h>
 #include <memory>
 #include <vector>
-
 #include "global.hpp"
 #include "image.hpp"
 #include "maze.hpp"
 #include "mixer.hpp"
 #include "player.hpp"
+#include "client.hpp"
+#include "server.hpp"
+#include "sstream"
+extern string network_state;
+extern int socket_;
 
 using namespace std;
 
@@ -19,13 +23,13 @@ class Enemy {
   };
 
   struct Enemy_data {
-    const unsigned char type;
+    const int type;
     Point pos;
     Point block;
     Point next_block;
-    unsigned char dir;           // max value is 4
-    unsigned char anime_count;   // 0 or 1
-    unsigned char anime_weight;  // max value is 8
+    int dir;           // max value is 4
+    int anime_count;   // 0 or 1
+    int anime_weight;  // max value is 8
     enemy_state state;
 
     Enemy_data(const unsigned char enemy_type) : type(enemy_type) {}
@@ -60,6 +64,8 @@ class Enemy {
   }
 
    void init()  {
+    //  cout<<"------------------------------------------"<<endl;
+    //  cout<<network_state<<endl;
     const Point start_block[4] = {{11, 12}, {12, 12}, {11, 11}, {12, 11}};
     for (auto &enemy : enemies_) {
       enemy.pos = {20 * start_block[enemy.type].x, 20 * start_block[enemy.type].y};
@@ -73,6 +79,8 @@ class Enemy {
   }
 
    void draw() const  {
+    // cout<<"------------------------------------------"<<endl;
+    // cout<<network_state<<endl;
     SDL_Texture *enemies_texture[4];
     enemies_texture[0] = image_manager_->get(8);
     enemies_texture[1] = image_manager_->get(9);
@@ -107,6 +115,30 @@ class Enemy {
         move_lose_enemy(enemy, maze, p1, p2);
       } else {
         move_normal_enemy(enemy, maze,game_level, p1, p2);
+      }
+      if (network_state == "server"){
+        string s;
+        s = to_string(enemy.pos.x) + "," + to_string(enemy.pos.y) +","+to_string(enemy.dir)+","+to_string(enemy.anime_count)+","+to_string(enemy.type);
+        cout<<s<<endl;
+        send_from_server(s,socket_);
+        string dump = receive_in_server(socket_);
+        cout<<dump<<endl;
+      }else{
+        send_from_client("Go",socket_);
+        string in = receive_in_client(socket_);
+        cout<<in<<endl;
+        vector<string> v;
+        stringstream ss(in);
+        while (ss.good()) {
+            string substr;
+            getline(ss, substr, ',');
+            v.push_back(substr);
+        }
+        cout << (enemy.type == stoi(v[4]))<<endl;
+        enemy.pos.x = stoi(v[0]);
+        enemy.pos.y = stoi(v[1]);
+        enemy.dir = stoi(v[2]);
+        enemy.anime_count = stoi(v[3]);
       }
     }
   }
