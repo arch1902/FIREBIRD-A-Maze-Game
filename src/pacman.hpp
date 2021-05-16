@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <string>
 #include "enemy.hpp"
 #include "font.hpp"
 #include "food.hpp"
@@ -13,6 +14,9 @@
 #include "mixer.hpp"
 #include "player.hpp"
 #include "wipe.hpp"
+#include "server.hpp"
+#include "client.hpp"
+#include "global.hpp"
 
 using namespace std;
 
@@ -300,7 +304,11 @@ class Pacman {
     if (fullscreen_mode_) {
       flags |= SDL_WINDOW_FULLSCREEN;
     }
-    window_ = SDL_CreateWindow("pacman-sdl", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, 640, 480, flags);
+    cout<<network_state<<endl;
+    string t = "pacman-sdl_"+network_state;
+    const char * s = t.c_str();
+    cout<<network_state<<endl;
+    window_ = SDL_CreateWindow(s, SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, 640, 480, flags);
     if (window_ == nullptr) {
       cerr << "error: " << SDL_GetError() << '\n';
       exit(EXIT_FAILURE);
@@ -327,27 +335,36 @@ class Pacman {
 
    void run()  {
     while(true) {
+      cout<<"Game Count : "<<game_count_<<endl;
+      cout<<network_state<<endl;
       input_manager_->update();
       switch (game_state_) {
         case game_state::title:
+          cout<<"Game State : title"<<endl;
           game_title();
           break;
         case game_state::start:
+          cout<<"Game State : Start"<<endl;
           game_start();
           break;
         case game_state::playing:
+          cout<<"Game State : Playing"<<endl;
           play_game();
           break;
         case game_state::clear:
+          cout<<"Game State : Clear"<<endl;
           game_clear();
           break;
         case game_state::miss:
+          cout<<"Game State : Miss"<<endl;
           game_miss();
           break;
         case game_state::gameover:
+          cout<<"Game State : Gameover"<<endl;
           game_over();
           break;
         case game_state::pause:
+          cout<<"Game State : Pause"<<endl;
           game_pause();
           break;
       }

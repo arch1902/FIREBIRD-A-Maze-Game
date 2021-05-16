@@ -27,7 +27,7 @@ void Pacman::game_title()  {
     const char *vs_mode_str = "2 Player";
     const SDL_Rect p1_str_dst = {250, 298, 112, 26};
     const SDL_Rect vs_str_dst = {250, 348, 112, 26};
-
+    cout<<network_state<<endl;
     switch (game_count_) {
       case 0: {
         wipe_->set_wipe_in();
@@ -119,10 +119,13 @@ void Pacman::game_title()  {
         }
 
         wipe_->draw(640);
-
+        cout<<network_state<<endl;
         // initialize globals
         if (wipe_->update()) {
+          cout<<"here1"<<endl;
+          cout<<network_state<<endl;
           maze_->init(game_mode_);
+          cout<<"here2"<<endl;
           food_->init(*maze_);
           enemy_->init();
           p1_->init_pos();
@@ -203,7 +206,7 @@ void Pacman::play_game()  {
   p2_->draw(game_mode_);
   draw_score();
   enemy_->move( *maze_,game_level_, *p1_, *p2_);
-  cout<<game_level_<<endl;
+  //cout<<game_level_<<endl;
   p1_->move(*maze_, game_mode_,game_level_);
   p2_->move(*maze_, game_mode_,game_level_);
   if (p1_->get_power_mode()) {

@@ -3,6 +3,9 @@
 #include <string>
 #include <utility>
 #include "pacman.hpp"
+#include "global.hpp"
+#include "client.hpp"
+#include "server.hpp"
 
 using namespace std;
 
@@ -55,8 +58,28 @@ Options:
 
 int main(int argc, char **argv) {
 
-  bool is_fullscreen = parse_options(argc, argv);
-  Pacman pacman(is_fullscreen);
+  //bool is_fullscreen = parse_options(argc, argv);
+  network_state = argv[1];
+  cout<<network_state<<endl;
+  if (network_state=="server"){
+    start_server();
+  }else if(network_state == "client"){
+    connect_client();
+  }else{
+    cout<<"Invalid Argument"<<endl;
+    exit(-1);
+  }
+
+  if (network_state=="server"){
+    send_from_server("hey_there");
+    string xyz = receive_in_server();
+    cout<<"Received "<<xyz<<endl;
+  }else{
+    send_from_client("hello_server");
+    string abc = receive_in_client();
+    cout<<"Received "<<abc<<endl;
+  }
+  Pacman pacman(false);
   pacman.run();
   exit(EXIT_SUCCESS);
 }

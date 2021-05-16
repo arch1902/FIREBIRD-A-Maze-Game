@@ -127,7 +127,7 @@ string generator(){
         // out += "\n";
         //cout<<endl;
     }
-    cout <<out;
+    //cout <<out;
     return out;
 }
 

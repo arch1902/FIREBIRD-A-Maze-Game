@@ -2,11 +2,14 @@
 
 #include <SDL2/SDL.h>
 #include <math.h>
+#include <string>
 
 enum class game_mode {
   single,
   multiplayer,
 };
+
+static std::string network_state;
 
 struct Point {
   int x;

@@ -1,4 +1,5 @@
-// Server side C/C++ program to demonstrate Socket programming
+#pragma once
+
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/socket.h>
@@ -6,15 +7,14 @@
 #include <netinet/in.h>
 #include <string.h>
 #define PORT 8080
-int main(int argc, char const *argv[])
-{
-	int server_fd, new_socket, valread;
+
+static int new_socket;
+
+static bool start_server(){
+	int server_fd, valread;
 	struct sockaddr_in address;
 	int opt = 1;
 	int addrlen = sizeof(address);
-	char buffer[1024] = {0};
-	char *hello = "Hello from server";
-	
 	// Creating socket file descriptor
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
 	{
@@ -43,18 +43,34 @@ int main(int argc, char const *argv[])
 		perror("listen");
 		exit(EXIT_FAILURE);
 	}
-	printf("here1\n");
-	if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
-					(socklen_t*)&addrlen))<0)
+	if ((new_socket = accept(server_fd, (struct sockaddr *)&address,(socklen_t*)&addrlen))<0)
 	{
-		printf("here1.5\n");
 		perror("accept");
 		exit(EXIT_FAILURE);
 	}
-	printf("here2\n");
-	valread = read( new_socket , buffer, 1024);
-	printf("%s\n",buffer );
-	send(new_socket , hello , strlen(hello) , 0 );
-	printf("Hello message sent\n");
-	return 0;
+	cout<<"Connection Established"<<endl;
+	cout<<"Server Socket :" << new_socket<<endl;
+	return true;
+}
+
+static void send_from_server(string s){
+	cout<<"Server trying to send :"<<s<<endl;
+	cout<<"Server Socket :" << new_socket<<endl;
+	const char * msg = s.c_str();
+	send(new_socket,msg,strlen(msg),0);
+	cout<<"Sent!"<<endl;
+}
+
+static std::string receive_in_server(){
+	char buffer[1024] = {0};
+	auto j = buffer[1];
+	int valread = read( new_socket , buffer, 1024);
+	//printf("%s\n",buffer );
+	std::string out;
+	int len = sizeof(buffer)/(8*sizeof(char));
+	for (int i = 0;i<len;i++){
+		if (buffer[i]== j){break;}
+		out += buffer[i];
+	}
+	return out;
 }

@@ -6,6 +6,8 @@
 #include "global.hpp"
 #include "image.hpp"
 #include "mazegenerator.hpp"
+#include "server.hpp"
+#include "client.hpp"
 
 using namespace std;
 
@@ -34,7 +36,29 @@ maze_state char_to_maze_state(const char c) {
 }
 
 void Maze::init(const game_mode mode)  {
-  const string block_src = generator();
+  cout<<"1"<<endl;
+  string s;
+  if (mode == game_mode::multiplayer){
+    cout<<"2"<<endl;
+    cout<<network_state<<endl;
+    if (network_state == "server"){
+      cout<<"3"<<endl;
+      s = generator();
+      cout<<"4"<<endl;
+      cout<<"Generated\n"<<s<<endl;
+      send_from_server(s);
+      cout<<"Sent"<<endl;
+    }else{
+      cout<<"5"<<endl;
+      s = receive_in_client();
+      cout<<"Received\n"<<s<<endl;
+    }
+  }else{
+    cout<<"6"<<endl;
+    s = generator();
+  }
+  cout<<"7"<<endl;
+  const string block_src = s;
   // const string block_src =
   //     "########################"
   //     "#..........##..........#"
