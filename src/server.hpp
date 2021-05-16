@@ -10,7 +10,7 @@
 
 static int new_socket;
 
-static bool start_server(){
+static int start_server(){
 	int server_fd, valread;
 	struct sockaddr_in address;
 	int opt = 1;
@@ -50,21 +50,21 @@ static bool start_server(){
 	}
 	cout<<"Connection Established"<<endl;
 	cout<<"Server Socket :" << new_socket<<endl;
-	return true;
+	return new_socket;
 }
 
-static void send_from_server(string s){
-	cout<<"Server trying to send :"<<s<<endl;
+static void send_from_server(string s,int n){
+	//cout<<"Server trying to send :"<<s<<endl;
 	cout<<"Server Socket :" << new_socket<<endl;
 	const char * msg = s.c_str();
-	send(new_socket,msg,strlen(msg),0);
-	cout<<"Sent!"<<endl;
+	cout<<send(n,msg,strlen(msg),0);
+	//cout<<"Sent!"<<endl;
 }
 
-static std::string receive_in_server(){
+static std::string receive_in_server(int n){
 	char buffer[1024] = {0};
 	auto j = buffer[1];
-	int valread = read( new_socket , buffer, 1024);
+	int valread = read(n, buffer, 1024);
 	//printf("%s\n",buffer );
 	std::string out;
 	int len = sizeof(buffer)/(8*sizeof(char));

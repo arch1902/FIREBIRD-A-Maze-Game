@@ -35,22 +35,22 @@ maze_state char_to_maze_state(const char c) {
   }
 }
 
-void Maze::init(const game_mode mode)  {
+void Maze::init(const game_mode mode, const string network,int n)  {
   cout<<"1"<<endl;
   string s;
   if (mode == game_mode::multiplayer){
     cout<<"2"<<endl;
-    cout<<network_state<<endl;
-    if (network_state == "server"){
+    cout<<network<<endl;
+    if (network == "server"){
       cout<<"3"<<endl;
       s = generator();
-      cout<<"4"<<endl;
-      cout<<"Generated\n"<<s<<endl;
-      send_from_server(s);
+      send_from_server(s,n);
+      string in = receive_in_server(n);
       cout<<"Sent"<<endl;
     }else{
       cout<<"5"<<endl;
-      s = receive_in_client();
+      send_from_client("Aane do!",n);
+      s = receive_in_client(n);
       cout<<"Received\n"<<s<<endl;
     }
   }else{

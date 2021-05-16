@@ -9,7 +9,7 @@
 
 static int sock;
 
-static bool connect_client(){
+static int connect_client(){
 	sock = 0;
 	struct sockaddr_in serv_addr;
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -33,21 +33,21 @@ static bool connect_client(){
 		return false;
 	}
 	cout<<"Client Socket :" << sock<<endl;
-	return true;
+	return sock;
 }
 
-static void send_from_client(string s){
-	cout<<"Client trying to send :"<<s<<endl;
+static void send_from_client(string s, int n){
+	//cout<<"Client trying to send :"<<s<<endl;
 	cout<<"Client Socket :" << sock<<endl;
 	const char * msg = s.c_str();
-	send(sock,msg,strlen(msg),0);
-	cout<<"Sent!"<<endl;
+	send(n,msg,strlen(msg),0);
+	
 }
 
-static std::string receive_in_client(){
-	char buffer[1024] = {0};
+static std::string receive_in_client(int n){
+	char buffer[8192] = {0};
 	auto j = buffer[1];
-	int valread = read( sock , buffer, 1024);
+	int valread = read( n , buffer, 8192);
 	//printf("%s\n",buffer );
 	std::string out;
 	int len = sizeof(buffer)/(8*sizeof(char));

@@ -61,25 +61,27 @@ int main(int argc, char **argv) {
   //bool is_fullscreen = parse_options(argc, argv);
   network_state = argv[1];
   cout<<network_state<<endl;
+  int socket;
   if (network_state=="server"){
-    start_server();
+    socket = start_server();
   }else if(network_state == "client"){
-    connect_client();
+    socket = connect_client();
   }else{
     cout<<"Invalid Argument"<<endl;
     exit(-1);
   }
 
   if (network_state=="server"){
-    send_from_server("hey_there");
-    string xyz = receive_in_server();
+    send_from_server("hey_there",socket);
+    string xyz = receive_in_server(socket);
     cout<<"Received "<<xyz<<endl;
   }else{
-    send_from_client("hello_server");
-    string abc = receive_in_client();
+    send_from_client("hello_server",socket);
+    string abc = receive_in_client(socket);
     cout<<"Received "<<abc<<endl;
   }
-  Pacman pacman(false);
+  const string network_mode = network_state;
+  Pacman pacman(false,network_mode,socket);
   pacman.run();
   exit(EXIT_SUCCESS);
 }
