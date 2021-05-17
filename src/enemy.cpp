@@ -170,7 +170,9 @@ void Enemy::move_normal_enemy(Enemy_data &enemy,const Maze &maze,int game_level,
 }
 
 void Enemy::move_lose_enemy(Enemy_data &enemy, const Maze &maze, const Player &p1, const Player &p2)  {
-  if (maze.get_home_distance(enemy.block) <= 20 ) {
+  Point h = {11*20,11*20};
+  Point e = {enemy.pos.x,enemy.pos.y};
+  if (h.distance(e) <= 30) {
     enemy.state = enemy_state::normal;
   }
 
@@ -226,7 +228,9 @@ bool Enemy::check_hit_enemy(const game_mode mode, Player &p1, Player &p2)  {
         return true;
       }
       if (enemy.state == enemy_state::normal) {
-        Mix_PlayChannel(4,mixer_manager_->get_sound(4), 0);
+        if (false){
+          Mix_PlayChannel(4,mixer_manager_->get_sound(4), 0);
+        }
         p1.set_score(p1.get_score() + 100);
       }
       enemy.state = enemy_state::lose;
@@ -243,7 +247,9 @@ bool Enemy::check_hit_enemy(const game_mode mode, Player &p1, Player &p2)  {
           return true;
         }
         if (enemy.state == enemy_state::normal) {
-          Mix_PlayChannel(4,mixer_manager_->get_sound(4), 0);
+          if (false){
+            Mix_PlayChannel(4,mixer_manager_->get_sound(4), 0);
+          }
           p2.set_score(p2.get_score() + 100);
         }
         enemy.state = enemy_state::lose;

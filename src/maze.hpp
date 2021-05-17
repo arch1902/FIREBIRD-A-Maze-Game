@@ -42,7 +42,7 @@ class Maze {
 
     int get_home_distance(const Point &p) const  {
     return home_distance_[p.y][p.x];
-  }
+    }
 
     int get_home_distance(const Point &&p) const  {
     return get_home_distance(p);

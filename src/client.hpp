@@ -38,7 +38,7 @@ static int connect_client(){
 
 static void send_from_client(string s, int n){
 	//cout<<"Client trying to send :"<<s<<endl;
-	cout<<"Client Socket :" << sock<<endl;
+	//cout<<"Client Socket :" << sock<<endl;
 	const char * msg = s.c_str();
 	send(n,msg,strlen(msg),0);
 	

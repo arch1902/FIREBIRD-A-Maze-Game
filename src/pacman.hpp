@@ -340,36 +340,36 @@ class Pacman {
 
    void run()  {
     while(true) {
-      cout<<"Game Count : "<<game_count_<<endl;
-      cout<<network_state<<endl;
+      //cout<<"Game Count : "<<game_count_<<endl;
+      //cout<<network_state<<endl;
       input_manager_->update();
       switch (game_state_) {
         case game_state::title:
-          cout<<"Game State : title"<<endl;
+          //cout<<"Game State : title"<<endl;
           game_title();
           break;
         case game_state::start:
-          cout<<"Game State : Start"<<endl;
+          //cout<<"Game State : Start"<<endl;
           game_start();
           break;
         case game_state::playing:
-          cout<<"Game State : Playing"<<endl;
+          //cout<<"Game State : Playing"<<endl;
           play_game();
           break;
         case game_state::clear:
-          cout<<"Game State : Clear"<<endl;
+          //cout<<"Game State : Clear"<<endl;
           game_clear();
           break;
         case game_state::miss:
-          cout<<"Game State : Miss"<<endl;
+          //cout<<"Game State : Miss"<<endl;
           game_miss();
           break;
         case game_state::gameover:
-          cout<<"Game State : Gameover"<<endl;
+          //cout<<"Game State : Gameover"<<endl;
           game_over();
           break;
         case game_state::pause:
-          cout<<"Game State : Pause"<<endl;
+          //cout<<"Game State : Pause"<<endl;
           game_pause();
           break;
       }

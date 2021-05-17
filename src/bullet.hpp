@@ -25,25 +25,27 @@ class Bullet {
 
     void draw() {
         SDL_Texture *bullet_texture;
-        cout<<"here1"<<endl;
+        //cout<<"here1"<<endl;
         bullet_texture = image_manager_->get(14);
-        cout<<"here2"<<endl;
+        //cout<<"here2"<<endl;
         const SDL_Rect dst = {(pos_.x),(pos_.y),20,20};
         const SDL_Rect src = {0,0,20,20};
-        cout<<"here3"<<endl;
+        //cout<<"here3"<<endl;
         image_manager_->render_copy(*bullet_texture, src, dst);
-        cout<<"here4"<<endl;
+        //cout<<"here4"<<endl;
         SDL_DestroyTexture(bullet_texture);
     }
     void move(const Maze &maze) {
+        int a = (pos_.x/5)*5;
+        int b = (pos_.y/5)*5;
         if (dir_ == 0){
-            pos_.y += 5;
+            pos_.y = b + 5;
         }else if (dir_ == 1){
-            pos_.x -= 5;
+            pos_.x = a - 5;
         }else if (dir_ == 2){
-            pos_.y -= 5;
+            pos_.y = b - 5;
         }else{
-            pos_.x += 5;
+            pos_.x = a + 5;
         }
         if (pos_.x%20 == 0 && pos_.y%20 == 0){
             Point dst_block = {pos_.x/20,pos_.y/20};
