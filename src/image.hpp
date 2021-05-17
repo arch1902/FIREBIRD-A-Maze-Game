@@ -46,6 +46,7 @@ class ImageManager {
     load("./data/guzuta.png", 11);
     load("./data/mon_run.png", 12);
     load("./data/plate.png", 13);
+    load("./data/bullet.png",14);
   }
 
    SDL_Texture *get(const unsigned char image_type) const  {

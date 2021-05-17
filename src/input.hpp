@@ -26,22 +26,18 @@ class InputManager {
     const Uint8 *state = SDL_GetKeyboardState(nullptr);
 
     new_press_key[0][0] =
-      state[SDL_SCANCODE_UP] == SDL_PRESSED
-      || state[SDL_SCANCODE_K] == SDL_PRESSED;
+      state[SDL_SCANCODE_UP] == SDL_PRESSED;
     new_press_key[0][1] =
-      state[SDL_SCANCODE_DOWN] == SDL_PRESSED
-      || state[SDL_SCANCODE_J] == SDL_PRESSED;
+      state[SDL_SCANCODE_DOWN] == SDL_PRESSED;
     new_press_key[0][2] =
-      state[SDL_SCANCODE_LEFT] == SDL_PRESSED
-      || state[SDL_SCANCODE_H] == SDL_PRESSED;
+      state[SDL_SCANCODE_LEFT] == SDL_PRESSED;
     new_press_key[0][3] =
-      state[SDL_SCANCODE_RIGHT] == SDL_PRESSED
-      || state[SDL_SCANCODE_L] == SDL_PRESSED;
+      state[SDL_SCANCODE_RIGHT] == SDL_PRESSED;
 
-    new_press_key[1][0] = state[SDL_SCANCODE_W] == SDL_PRESSED;
-    new_press_key[1][1] = state[SDL_SCANCODE_S] == SDL_PRESSED;
-    new_press_key[1][2] = state[SDL_SCANCODE_A] == SDL_PRESSED;
-    new_press_key[1][3] = state[SDL_SCANCODE_D] == SDL_PRESSED;
+    new_press_key[1][0] = state[SDL_SCANCODE_UP] == SDL_PRESSED;
+    new_press_key[1][1] = state[SDL_SCANCODE_DOWN] == SDL_PRESSED;
+    new_press_key[1][2] = state[SDL_SCANCODE_LEFT] == SDL_PRESSED;
+    new_press_key[1][3] = state[SDL_SCANCODE_RIGHT] == SDL_PRESSED;
 
     new_press_key[0][4] = state[SDL_SCANCODE_SPACE] == SDL_PRESSED;
     new_press_key[1][4] = state[SDL_SCANCODE_SPACE] == SDL_PRESSED;
