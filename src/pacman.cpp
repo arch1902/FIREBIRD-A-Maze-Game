@@ -206,10 +206,129 @@ void Pacman::play_game()  {
   p1_->draw(game_mode_);
   p2_->draw(game_mode_);
   draw_score();
+  cout<<"Going into moving enemy"<<endl;
   enemy_->move( *maze_,game_level_, *p1_, *p2_);
-  //cout<<game_level_<<endl;
   p1_->move(*maze_, game_mode_,game_level_);
   p2_->move(*maze_, game_mode_,game_level_);
+  if (network_state == "server"){
+    string s;
+    for (auto &enemy : enemy_->enemies_) {
+      s = s + to_string(enemy.pos.x) + "," + to_string(enemy.pos.y) +","+to_string(enemy.dir)+","+to_string(enemy.anime_count)+",";
+    }
+    s += to_string(p1_->get_pos().x)+","+to_string(p1_->get_pos().y)+","+to_string(p1_->get_dir())+","+to_string(p1_->get_count());
+    send_from_server(s,socket_);
+    cout<<"Server Enemy Send "<<s<<endl;
+    string dump = receive_in_server(socket_);
+    vector<string> v;
+    stringstream ss(dump);
+    while (ss.good()) {
+        string substr;
+        getline(ss, substr, ',');
+        v.push_back(substr);
+    }
+    p2_->set_pos({stoi(v[0]),stoi(v[1])});
+    p2_->set_dir(stoi(v[2]));
+    p2_->set_count(stoi(v[3]));
+  }else{
+      string s = to_string(p2_->get_pos().x)+","+to_string(p2_->get_pos().y)+","+to_string(p2_->get_dir())+","+to_string(p2_->get_count()); 
+      send_from_client(s,socket_);
+      string in = receive_in_client(socket_);
+      cout<<"Cient Enemy Receive "<<in<<endl;
+      vector<string> v;
+      stringstream ss(in);
+      while (ss.good()) {
+          string substr;
+          getline(ss, substr, ',');
+          v.push_back(substr);
+      }
+      int i = 0;
+      for(auto &enemy : enemy_->enemies_){
+        enemy.pos.x = stoi(v[i++]);
+        enemy.pos.y = stoi(v[i++]);
+        enemy.dir = stoi(v[i++]);
+        enemy.anime_count = stoi(v[i++]);
+      }
+      p1_->set_pos({stoi(v[i]),stoi(v[i+1])});
+      p1_->set_dir(stoi(v[i+2]));
+      p1_->set_count(stoi(v[i+3]));
+      i = i+4;
+  }
+
+  // for (auto &enemy : enemy_->enemies_) {
+  //   if (network_state == "server"){
+  //     string s;
+  //     s = to_string(enemy.pos.x) + "," + to_string(enemy.pos.y) +","+to_string(enemy.dir)+","+to_string(enemy.anime_count)+","+to_string(enemy.type);
+  //     cout<<"Server Enemy Sending "<<s<<endl;
+  //     send_from_server(s,socket_);
+  //     //string dump = receive_in_server(socket_);
+  //     //string if_received = receive_in_server(socket_);
+  //     //cout<<dump<<endl;
+  //   }else{
+  //     //send_from_client("Come",socket_);
+  //     string in = receive_in_client(socket_);
+  //     //send_from_client("Got it",socket_);
+  //     cout<<"Cient Enemy Receive "<<in<<endl;
+  //     vector<string> v;
+  //     stringstream ss(in);
+  //     while (ss.good()) {
+  //         string substr;
+  //         getline(ss, substr, ',');
+  //         v.push_back(substr);
+  //     }
+  //     cout << (enemy.type == stoi(v[4]))<<endl;
+  //     enemy.pos.x = stoi(v[0]);
+  //     enemy.pos.y = stoi(v[1]);
+  //     enemy.dir = stoi(v[2]);
+  //     enemy.anime_count = stoi(v[3]);
+  //   }
+  // }
+  cout <<"Came back from moving enemy and now am going to move players"<<endl;
+  //cout<<game_level_<<endl;
+  //if (true){
+  // if (game_mode_ == game_mode::single){
+
+  // }else{
+  //   if (network_state == "server"){
+  //     //string p = receive_in_server(socket_);
+  //     //cout<<"Received "<<p<<endl;
+  //     p1_->move(*maze_, game_mode_,game_level_);
+  //     string s = to_string(p1_->get_pos().x)+","+to_string(p1_->get_pos().y)+","+to_string(p1_->get_dir())+","+to_string(p1_->get_count());
+  //     send_from_server(s,socket_);
+  //     cout<<"Server Player Sent "<<s<<endl;
+  //     string in1 = receive_in_server(socket_);
+  //     cout<<"Server Player Received "<<in1<<endl;
+  //     vector<string> v;
+  //     stringstream ss(in1);
+  //     while (ss.good()) {
+  //         string substr;
+  //         getline(ss, substr, ',');
+  //         v.push_back(substr);
+  //     }
+  //     p2_->set_pos({stoi(v[0]),stoi(v[1])});
+  //     p2_->set_dir(stoi(v[2]));
+  //     p2_->set_count(stoi(v[3]));
+  //   }else{
+  //     // send_from_client("Come",socket_);
+  //     // cout<<"Sent come "<<endl;
+  //     p2_->move(*maze_, game_mode_,game_level_);
+  //     string s = to_string(p2_->get_pos().x)+","+to_string(p2_->get_pos().y)+","+to_string(p2_->get_dir())+","+to_string(p2_->get_count()); 
+  //     send_from_client(s,socket_);
+  //     cout<<"Client Player Sent "<<s<<endl;
+  //     string in2 = receive_in_client(socket_); 
+  //     cout<<"Client Player Received "<<in2<<endl;
+  //     vector<string> v;
+  //     stringstream ss(in2);
+  //     while (ss.good()) {
+  //         string substr;
+  //         getline(ss, substr, ',');
+  //         v.push_back(substr);
+  //     }
+  //     p1_->set_pos({stoi(v[0]),stoi(v[1])});
+  //     p1_->set_dir(stoi(v[2]));
+  //     p1_->set_count(stoi(v[3]));
+  //   }
+  // }
+  cout<<"Am back from moving players"<<endl;
   if (p1_->get_power_mode()) {
     p1_->set_power_mode(p1_->get_power_mode() - 1);
   }

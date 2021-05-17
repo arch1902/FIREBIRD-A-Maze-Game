@@ -71,7 +71,8 @@ class Food {
   }
 
    bool check_state(const game_mode mode, Player &p1, Player &p2)  {
-    const Point block = p1.get_block();
+    const Point posi = p1.get_pos();
+    Point block = {posi.x/20,posi.y/20};
     switch (food_[block.y][block.x]) {
       case food_state::food: {
         Mix_PlayChannel(3, mixer_manager_->get_sound(3),0);
@@ -89,7 +90,8 @@ class Food {
     }
 
     if (mode == game_mode::multiplayer) {
-      const Point block = p2.get_block();
+      const Point posi = p2.get_pos();
+      Point block = {posi.x/20,posi.y/20};
       switch (food_[block.y][block.x]) {
         case food_state::food: {
           Mix_PlayChannel(3, mixer_manager_->get_sound(3), 0);

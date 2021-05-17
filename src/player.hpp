@@ -12,8 +12,8 @@ class Player {
   Point pos_;
   Point block_;
   Point next_block_;
-  unsigned char dir_;           // 0: down, 1: left, 2: up, 3: right
-  unsigned char anime_count_;   // 0 or 1
+  int dir_;           // 0: down, 1: left, 2: up, 3: right
+  int anime_count_;   // 0 or 1
   unsigned char anime_weight_;  // max value is 4
   int life_;
   unsigned int score_;
@@ -155,6 +155,12 @@ class Player {
    void set_pos(const Point &p)  { pos_ = p; }
    void set_pos(const Point &&p)  { pos_ = p; }
 
+   int get_dir() const { return dir_;}
+   void set_dir(int n) {dir_ = n;} 
+
+   int get_count() const { return anime_count_;}
+   void set_count(int n) {anime_count_ = n;} 
+  
    Point get_block() const  { return block_; }
 
    int get_life() const  { return life_; }

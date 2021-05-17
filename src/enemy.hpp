@@ -17,6 +17,7 @@ extern int socket_;
 using namespace std;
 
 class Enemy {
+  public:
   enum class enemy_state {
     normal,
     lose,
@@ -54,7 +55,6 @@ class Enemy {
 
   void move_lose_enemy(Enemy_data &enemy, const Maze &maze, const Player &p1, const Player &p2) ;
 
- public:
   Enemy(const ImageManager *image_manager,const MixerManager *mixer_manager) 
       : image_manager_(image_manager), mixer_manager_(mixer_manager) {
     enemies_.reserve(4);
@@ -116,30 +116,32 @@ class Enemy {
       } else {
         move_normal_enemy(enemy, maze,game_level, p1, p2);
       }
-      if (network_state == "server"){
-        string s;
-        s = to_string(enemy.pos.x) + "," + to_string(enemy.pos.y) +","+to_string(enemy.dir)+","+to_string(enemy.anime_count)+","+to_string(enemy.type);
-        cout<<s<<endl;
-        send_from_server(s,socket_);
-        string dump = receive_in_server(socket_);
-        cout<<dump<<endl;
-      }else{
-        send_from_client("Go",socket_);
-        string in = receive_in_client(socket_);
-        cout<<in<<endl;
-        vector<string> v;
-        stringstream ss(in);
-        while (ss.good()) {
-            string substr;
-            getline(ss, substr, ',');
-            v.push_back(substr);
-        }
-        cout << (enemy.type == stoi(v[4]))<<endl;
-        enemy.pos.x = stoi(v[0]);
-        enemy.pos.y = stoi(v[1]);
-        enemy.dir = stoi(v[2]);
-        enemy.anime_count = stoi(v[3]);
-      }
+      // if (network_state == "server"){
+      //   string s;
+      //   s = to_string(enemy.pos.x) + "," + to_string(enemy.pos.y) +","+to_string(enemy.dir)+","+to_string(enemy.anime_count)+","+to_string(enemy.type);
+      //   cout<<"Server Enemy Sending "<<s<<endl;
+      //   send_from_server(s,socket_);
+      //   string dump = receive_in_server(socket_);
+      //   string if_received = receive_in_server(socket_);
+      //   //cout<<dump<<endl;
+      // }else{
+      //   send_from_client("Come",socket_);
+      //   string in = receive_in_client(socket_);
+      //   send_from_client("Got it",socket_);
+      //   cout<<"Cient Enemy Receive "<<in<<endl;
+      //   vector<string> v;
+      //   stringstream ss(in);
+      //   while (ss.good()) {
+      //       string substr;
+      //       getline(ss, substr, ',');
+      //       v.push_back(substr);
+      //   }
+      //   cout << (enemy.type == stoi(v[4]))<<endl;
+      //   enemy.pos.x = stoi(v[0]);
+      //   enemy.pos.y = stoi(v[1]);
+      //   enemy.dir = stoi(v[2]);
+      //   enemy.anime_count = stoi(v[3]);
+      // }
     }
   }
   bool check_hit_enemy(const game_mode mode, Player &p1, Player &p2) ;
