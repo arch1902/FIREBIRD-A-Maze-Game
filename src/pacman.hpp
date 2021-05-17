@@ -17,6 +17,7 @@
 #include "server.hpp"
 #include "client.hpp"
 #include "global.hpp"
+#include "bullet.hpp"
 
 using namespace std;
 
@@ -53,6 +54,8 @@ class Pacman {
   unsigned int blink_count_;
   unsigned int game_count_;
 
+  unique_ptr<Bullet> p1_bullet;
+  unique_ptr<Bullet> p2_bullet;
   unique_ptr<ImageManager> image_manager_;
   unique_ptr<MixerManager> mixer_manager_;
   unique_ptr<Wipe> wipe_;
@@ -323,6 +326,8 @@ class Pacman {
     image_manager_ = make_unique<ImageManager>(renderer_);
     mixer_manager_ = make_unique<MixerManager>();
     input_manager_ = make_unique<InputManager>();
+    p1_bullet = make_unique<Bullet>(image_manager_.get());
+    p2_bullet = make_unique<Bullet>(image_manager_.get());
     wipe_ = make_unique<Wipe>(renderer_);
     maze_ = make_unique<Maze>(renderer_, image_manager_.get());
     food_ = make_unique<Food>(image_manager_.get(), mixer_manager_.get());

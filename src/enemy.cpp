@@ -16,7 +16,7 @@ void Enemy::move_normal_enemy(Enemy_data &enemy,const Maze &maze,int game_level,
     update();
 
     int move_value;
-    if(game_level==1) move_value=2;
+    if(game_level==1) move_value=1;
     else if (game_level==2) move_value=4;
     else if (game_level==3) move_value=5;
     else move_value=10;
@@ -170,7 +170,7 @@ void Enemy::move_normal_enemy(Enemy_data &enemy,const Maze &maze,int game_level,
 }
 
 void Enemy::move_lose_enemy(Enemy_data &enemy, const Maze &maze, const Player &p1, const Player &p2)  {
-  if (p1.get_power_mode() == 0 && p2.get_power_mode() == 0) {
+  if (maze.get_home_distance(enemy.block) <= 20 ) {
     enemy.state = enemy_state::normal;
   }
 

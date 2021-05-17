@@ -24,7 +24,7 @@ class ImageManager {
 
  public:
   ImageManager(SDL_Renderer *renderer)  : renderer_(renderer) {
-    images_.reserve(14);
+    images_.reserve(15);
 
     const int flag = IMG_INIT_PNG;
     if ((IMG_Init(flag) & flag) != flag) {
@@ -46,7 +46,7 @@ class ImageManager {
     load("./data/guzuta.png", 11);
     load("./data/mon_run.png", 12);
     load("./data/plate.png", 13);
-    load("./data/bullet.png",14);
+    load("./data/bullet2.png",14);
   }
 
    SDL_Texture *get(const unsigned char image_type) const  {

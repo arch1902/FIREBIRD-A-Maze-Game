@@ -4,8 +4,10 @@
 #include "image.hpp"
 #include "input.hpp"
 #include "maze.hpp"
+#include "bullet.hpp"
 
 class Player {
+  public:
   const unsigned char type_;
   const ImageManager *image_manager_;
   const InputManager *input_manager_;
@@ -20,12 +22,11 @@ class Player {
   bool damaged_p_;
   unsigned int power_mode_;  // 0: not power mode, not 0: power mode
 
- public:
   Player(const unsigned char player_type, const ImageManager *image_manager,const InputManager *input_manager) 
       : type_(player_type),
         image_manager_(image_manager),
-        input_manager_(input_manager) {}
-
+        input_manager_(input_manager){}
+  
    void init_pos()  {
     switch (type_) {
       case 0: {

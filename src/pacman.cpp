@@ -12,6 +12,7 @@
 #include "mixer.hpp"
 #include "player.hpp"
 #include "wipe.hpp"
+#include "bullet.hpp"
 extern string network_state;
 extern int socket_;
 
@@ -210,6 +211,38 @@ void Pacman::play_game()  {
   enemy_->move( *maze_,game_level_, *p1_, *p2_);
   p1_->move(*maze_, game_mode_,game_level_);
   p2_->move(*maze_, game_mode_,game_level_);
+  if (p1_bullet->present_){
+    cout<<"Am about to draw the bullet"<<endl;
+    p1_bullet->draw();
+    p1_bullet->move(*maze_);
+    cout<<"Bullet P1"<<p1_bullet->pos_.x<<" , "<<p1_bullet->pos_.y<<endl;
+    cout<<"Pos P2"<<p2_->pos_.x<<" , "<<p2_->pos_.y<<endl;
+    if (p1_bullet->pos_.distance(p2_->pos_)<=5){
+      p2_->set_damaged(true);
+      game_state_ = game_state::miss;
+    }
+    for(auto &enemy : enemy_->enemies_){
+      cout<<"Enemy Bullet Distance :"<< enemy.pos.distance(p1_bullet->pos_)<<endl;
+      if(enemy.pos.distance(p1_bullet->pos_)<=5){
+        enemy.state = Enemy::enemy_state::lose;
+      }
+    }
+  }
+  if (p2_bullet->present_){
+    p2_bullet->draw();
+    p2_bullet->move(*maze_);
+  }
+  if (!p1_bullet->present_ && input_manager_->edge_key_p(0, 5)){
+    cout<<"Player 1 fired a bullet"<<endl;
+    p1_bullet->present_ = true;
+    p1_bullet->pos_ = p1_->pos_;
+    p1_bullet->dir_ = p1_->dir_;
+  }
+  if (!p2_bullet->present_ && input_manager_->edge_key_p(1, 5)){
+    p2_bullet->present_ = true;
+    p2_bullet->pos_ = p1_->pos_;
+    p2_bullet->dir_ = p1_->dir_;
+  }
   if (network_state == "server"){
     string s;
     for (auto &enemy : enemy_->enemies_) {
@@ -344,7 +377,6 @@ void Pacman::play_game()  {
   } else if (hit_enemy) {
     game_state_ = game_state::miss;
   }
-
   if (input_manager_->edge_key_p(0, 4)) {
     game_state_ = game_state::pause;
   }
