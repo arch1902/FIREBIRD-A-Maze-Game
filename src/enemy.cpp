@@ -9,6 +9,7 @@
 #include "player.hpp"
 extern string network_state;
 extern int socket_;
+extern bool music;
 
 void Enemy::move_normal_enemy(Enemy_data &enemy,const Maze &maze,int game_level,const Player &p1, const Player &p2)  {
   const Point dst_pos = {enemy.next_block.x * 20, enemy.next_block.y * 20};
@@ -237,7 +238,7 @@ bool Enemy::check_hit_enemy(const game_mode mode, Player &p1, Player &p2)  {
         return true;
       }
       if (enemy.state == enemy_state::normal) {
-        if (false){
+        if (music){
           Mix_PlayChannel(4,mixer_manager_->get_sound(4), 0);
         }
         p1.set_score(p1.get_score() + 100);
@@ -256,7 +257,7 @@ bool Enemy::check_hit_enemy(const game_mode mode, Player &p1, Player &p2)  {
           return true;
         }
         if (enemy.state == enemy_state::normal) {
-          if (false){
+          if (music){
             Mix_PlayChannel(4,mixer_manager_->get_sound(4), 0);
           }
           p2.set_score(p2.get_score() + 100);

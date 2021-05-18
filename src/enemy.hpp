@@ -13,6 +13,7 @@
 #include "sstream"
 extern string network_state;
 extern int socket_;
+extern bool music;
 
 using namespace std;
 

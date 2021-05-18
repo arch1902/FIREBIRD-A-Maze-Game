@@ -18,6 +18,7 @@
 #include "client.hpp"
 #include "global.hpp"
 #include "bullet.hpp"
+extern bool music;
 
 using namespace std;
 

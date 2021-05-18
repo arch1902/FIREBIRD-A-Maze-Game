@@ -15,18 +15,22 @@
 #include "bullet.hpp"
 extern string network_state;
 int socket_;
+bool music = true;
 using namespace std;
 
 void Pacman::game_title()  {
     SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
     SDL_RenderClear(renderer_);
 
-    const Point title_pos = Point{160, 160};
+    const Point title_pos = Point{180, 160};
     const Point p1_mode_pos = Point{270, 300};
     const Point vs_mode_pos = Point{270, 350};
+    const Point Ins = Point{220,215};
+    const Point Mus = Point{215,245};
     const char *title_str = "F i r e  -  B i r d";
     const char *p1_mode_str = "1 Player";
     const char *vs_mode_str = "2 Player";
+    const Point music_pos = Point{50,50};
     const SDL_Rect p1_str_dst = {250, 298, 112, 26};
     const SDL_Rect vs_str_dst = {250, 348, 112, 26};
     //cout<<network_state_<<endl;
@@ -48,7 +52,7 @@ void Pacman::game_title()  {
       case 2: {
         draw_text(0, rgb::black, title_pos, title_str);
         if (blink_count_ < 30) {
-          draw_text(1, rgb::black, Point{205, 300}, "P r e s s   S p a c e   K e y");
+          draw_text(1, rgb::black, Point{215, 300}, "P r e s s   S p a c e   K e y ");
           blink_count_++;
         } else if (blink_count_ < 60) {
           blink_count_++;
@@ -71,6 +75,13 @@ void Pacman::game_title()  {
       }
       case 4: {
         draw_text(0, rgb::black, title_pos, title_str);
+        if(music){
+          draw_text(1, rgb::black, music_pos, "Music ON");
+        }else{
+          draw_text(1, rgb::black, music_pos, "Music OFF");
+        }
+        draw_text(1, rgb::black, Ins, "Press I for Instructions" );
+        draw_text(1, rgb::black, Mus, "Press M for Music Toggle" );
         //draw_text(1, rgb::black, title_pos, "P l e a s e   W a i t");
 
         switch (game_mode_) {
@@ -94,7 +105,14 @@ void Pacman::game_title()  {
           game_state_ = game_state::instructions;
           game_count_ = 0;
         }
-
+        if (input_manager_->press_key_p(0, 7)){
+          if (music){
+            music = false;
+          }else{
+            music = true;
+          }
+          SDL_Delay(50);
+        }
 
         if ( input_manager_->press_key_p(0, 4)) {
             if (game_mode_ == game_mode::multiplayer){
@@ -179,7 +197,7 @@ void Pacman::game_title()  {
           game_level_ = 1;
 
           srand((unsigned int)time(nullptr));
-          if (false){
+          if (music){
             Mix_PlayMusic(mixer_manager_->get_music(), -1);
           }
         }
@@ -200,7 +218,7 @@ void Pacman::game_start()  {
   switch (game_count_) {
     case 0: {
       if (p1_->get_life() == 2 && p2_->get_life() == 2) {
-        if(false){
+        if(music){
           Mix_PlayChannel(1,mixer_manager_->get_sound(1),0);
         }
       }
@@ -257,6 +275,11 @@ void Pacman::play_game()  {
     }
     if (!p1_bullet->present_ && input_manager_->edge_key_p(0, 5)){
       cout<<"Player 1 fired a bullet"<<endl;
+      //p1_->score_ = std::max(p1_->score_-10,0);
+      p1_->score_ = (p1_->score_ >10) ? p1_->score_-10:0;
+      if (music){
+          Mix_PlayChannel(-1,mixer_manager_->get_sound(5), 0);
+      }
       p1_bullet->present_ = true;
       p1_bullet->pos_ = p1_->pos_;
       p1_bullet->dir_ = p1_->dir_;
@@ -267,6 +290,10 @@ void Pacman::play_game()  {
     }
     if (!p2_bullet->present_ && input_manager_->edge_key_p(1, 5)){
       cout<<"Player 2 fired a bullet"<<endl;
+      p2_->score_ = (p2_->score_ >10) ? p2_->score_-10:0;
+      if (music){
+          Mix_PlayChannel(-1,mixer_manager_->get_sound(5), 0);
+      }
       p2_bullet->present_ = true;
       p2_bullet->pos_ = p2_->pos_;
       p2_bullet->dir_ = p2_->dir_;
@@ -410,6 +437,7 @@ void Pacman::play_game()  {
     if (p1_bullet->pos_.distance(p2_->pos_)<=5){
       p2_->set_damaged(true);
       game_state_ = game_state::miss;
+      p1_->score_ += 100;
       p1_bullet->present_ = false;
     }
     for(auto &enemy : enemy_->enemies_){
@@ -418,7 +446,11 @@ void Pacman::play_game()  {
         // enemy.pos.x = (enemy.pos.x/20)*20;
         // enemy.pos.y = (enemy.pos.y/20)*20;
         cout<<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
+        p1_->score_ += 100;
         enemy.state = Enemy::enemy_state::lose;
+        if (music){
+          Mix_PlayChannel(4,mixer_manager_->get_sound(4), 0);
+        }
         p1_bullet->present_ = false;
       }
     }
@@ -429,6 +461,7 @@ void Pacman::play_game()  {
       p1_->set_damaged(true);
       game_state_ = game_state::miss;
       p2_bullet->present_ = false;
+      p2_->score_ += 100;
     }
     for(auto &enemy : enemy_->enemies_){
       //cout<<"Enemy Bullet Distance :"<< enemy.pos.distance(p2_bullet->pos_)<<endl;
@@ -437,6 +470,10 @@ void Pacman::play_game()  {
         // enemy.pos.y = (enemy.pos.y/20)*20;
         cout<<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
         enemy.state = Enemy::enemy_state::lose;
+        p2_->score_ += 100;
+        if (music){
+          Mix_PlayChannel(4,mixer_manager_->get_sound(4), 0);
+        }
         p2_bullet->present_ = false;
       }
     }
@@ -505,7 +542,7 @@ void Pacman::game_miss()  {
   draw_score();
 
   if (game_count_ == 0) {
-    if (false){
+    if (music){
       Mix_HaltChannel(-1);
       Mix_PlayChannel(-1, mixer_manager_->get_sound(2), 0);
     }
@@ -551,139 +588,74 @@ void Pacman::game_instructions()  {
   SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
   SDL_RenderClear(renderer_);
 
-  const Point gameover_pos = Point{165, 50};
-  const char *gameover_str = "G a m e I n s ";
-  switch (game_mode_) {
-    case game_mode::single: {
-      switch (game_count_) {
-        case 0: {
-          draw_text(0, rgb::red, gameover_pos, gameover_str);
-          wipe_->set_wipe_in();
-          wipe_->draw(640);
-          game_count_++;
-          break;
-        }
-        case 1: {
-          draw_text(0, rgb::red, gameover_pos, gameover_str);
-          wipe_->draw(640);
-          if (wipe_->update()) {
-            game_count_++;
-          }
-          break;
-        }
-        case 2: {
-          draw_text(0, rgb::red, gameover_pos, gameover_str);
-          stringstream ss;
-          ss << "These are the set of Instructions" ;
-          draw_text(1, rgb::black, Point{120, 220}, ss.str().c_str());
-
-          if (blink_count_ < 30) {
-            draw_text(1, rgb::black, Point{210, 350}, "Press 'I' Key to Return");
-            blink_count_++;
-          } else if (blink_count_ < 60) {
-            blink_count_++;
-          } else {
-            blink_count_ = 0;
-          }
-
-          if (input_manager_->press_key_p(0, 6)) {
-            game_count_++;
-            wipe_->set_wipe_out();
-            wipe_->draw(640);
-          }
-          break;
-        }
-        case 3: {
-          wipe_->draw(640);
-          if (wipe_->update()) {
-            blink_count_ = 0;
-            game_count_ = 0;
-            game_state_ = game_state::title;
-            Mix_HaltMusic();
-          }
-          break;
-        }
-        default:
-          break;
+  const Point gameover_pos = Point{150, 20};
+  const char *gameover_str = "Game Instructions";
+  switch (game_count_) {
+    case 0: {
+      draw_text(0, rgb::red, gameover_pos, gameover_str);
+      wipe_->set_wipe_in();
+      wipe_->draw(640);
+      game_count_++;
+      break;
+    }
+    case 1: {
+      draw_text(0, rgb::red, gameover_pos, gameover_str);
+      wipe_->draw(640);
+      if (wipe_->update()) {
+        game_count_++;
       }
       break;
     }
-    case game_mode::multiplayer: {
-      switch (game_count_) {
-        case 0: {
-          draw_text(0, rgb::red, gameover_pos, gameover_str);
-          wipe_->set_wipe_in();
-          wipe_->draw(640);
-          game_count_++;
-          break;
-        }
-        case 1: {
-          draw_text(0, rgb::red, gameover_pos, gameover_str);
-          wipe_->draw(640);
-          if (wipe_->update()) {
-            game_count_++;
-          }
-          break;
-        }
-        case 2: {
-          draw_text(0, rgb::red, gameover_pos, gameover_str);
-          stringstream ss;
-          const unsigned int p1_score = p1_->get_score();
-          const unsigned int p2_score = p2_->get_score();
-          if (p1_score > p2_score) {
-            ss << "P 1  W I N S  : " << p1_score;
-            draw_text(0, rgb::black, Point{170, 240},
-                      ss.str().c_str());
-          } else if (p1_score < p2_score) {
-            ss << "P 2  W I N S  : " << p2_score;
-            draw_text(0, rgb::black, Point{170, 240},
-                      ss.str().c_str());
-          } else {
-            ss << "D R A W  " << p1_score;
-            draw_text(0, rgb::black, Point{170, 240},
-                      ss.str().c_str());
-          }
+    case 2: {
+      draw_text(0, rgb::red, gameover_pos, gameover_str);
+      //string ss;
+      //ss = "Keys" ;
+      draw_text(1, rgb::black, Point{80, 90}, "Keys");
+      //ss = "Use up, down, left, right arrow keys to move";
+      draw_text(1, rgb::black, Point{100, 120}, "-> Use up, down, left, right arrow keys to move.");
+      //ss = "Use Left-Shift to shoot Enemies or Other Player";
+      draw_text(1, rgb::black, Point{100, 150}, "-> Use Left-Shift to shoot Enemies or Other Player.");
+      //ss = "Use space to pause the Game";  
+      draw_text(1, rgb::black, Point{100, 180}, "-> Use space to pause the Game."); 
+      draw_text(1, rgb::black, Point{80, 210}, "Scoring Criteria"); 
+      draw_text(1, rgb::black, Point{100, 240}, "-> Eating food = 10 points & Firing a bullet = -10 points");
+      draw_text(1, rgb::black, Point{100, 270}, "-> Killing or Shooting Enemy or Other Player = 100 points.");
+      //draw_text(1, rgb::black, Point{100, 300}, "-> Use space to pause the Game"); 
+      draw_text(1, rgb::black, Point{80, 300}, "Special Power");
+      draw_text(1, rgb::black, Point{100, 330}, "-> Eating Apple makes you Immune to enemies for some time.");
+      draw_text(1, rgb::black, Point{80, 360}, "Wining Criteria");
+      draw_text(1, rgb::black, Point{100, 390}, "-> The player with highest score at end of game wins."); 
+      //draw_text(1, rgb::black, Point{100, 390}, "Each player has three lives, upon ending the one with highest score wins"); 
+      if (blink_count_ < 30) {
+        draw_text(1, rgb::black, Point{210, 420}, "Press 'I' Key to Return");
+        blink_count_++;
+      } else if (blink_count_ < 60) {
+        blink_count_++;
+      } else {
+        blink_count_ = 0;
+      }
 
-          if (blink_count_ < 30) {
-            draw_text(1, rgb::black, Point{210, 380}, "P r e s s  S p a c e  K e y");
-            blink_count_++;
-          } else if (blink_count_ < 60) {
-            blink_count_++;
-          } else {
-            blink_count_ = 0;
-          }
-
-          if (input_manager_->press_key_p(0, 4)) {
-            game_count_++;
-            wipe_->set_wipe_out();
-            wipe_->draw(640);
-          }
-          break;
-        }
-        case 3: {
-          wipe_->draw(640);
-          if (wipe_->update()) {
-            blink_count_ = 0;
-            game_count_ = 0;
-            game_state_ = game_state::title;
-          }
-          break;
-        }
-        default:
-          break;
+      if (input_manager_->press_key_p(0, 6)) {
+        game_count_++;
+        wipe_->set_wipe_out();
+        wipe_->draw(640);
       }
       break;
     }
+    case 3: {
+      wipe_->draw(640);
+      if (wipe_->update()) {
+        blink_count_ = 0;
+        game_count_ = 4;
+        game_state_ = game_state::title;
+        Mix_HaltMusic();
+      }
+      break;
+    }
+    default:
+      break;
   }
 }
-
-
-
-
-
-
-
-
 
 void Pacman::game_over()  {
   SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
