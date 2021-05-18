@@ -111,7 +111,7 @@ void Pacman::game_title()  {
           }else{
             music = true;
           }
-          SDL_Delay(50);
+          SDL_Delay(200);
         }
 
         if ( input_manager_->press_key_p(0, 4)) {
@@ -357,94 +357,16 @@ void Pacman::play_game()  {
     }
   }
 
-  // for (auto &enemy : enemy_->enemies_) {
-  //   if (network_state == "server"){
-  //     string s;
-  //     s = to_string(enemy.pos.x) + "," + to_string(enemy.pos.y) +","+to_string(enemy.dir)+","+to_string(enemy.anime_count)+","+to_string(enemy.type);
-  //     cout<<"Server Enemy Sending "<<s<<endl;
-  //     send_from_server(s,socket_);
-  //     //string dump = receive_in_server(socket_);
-  //     //string if_received = receive_in_server(socket_);
-  //     //cout<<dump<<endl;
-  //   }else{
-  //     //send_from_client("Come",socket_);
-  //     string in = receive_in_client(socket_);
-  //     //send_from_client("Got it",socket_);
-  //     cout<<"Cient Enemy Receive "<<in<<endl;
-  //     vector<string> v;
-  //     stringstream ss(in);
-  //     while (ss.good()) {
-  //         string substr;
-  //         getline(ss, substr, ',');
-  //         v.push_back(substr);
-  //     }
-  //     cout << (enemy.type == stoi(v[4]))<<endl;
-  //     enemy.pos.x = stoi(v[0]);
-  //     enemy.pos.y = stoi(v[1]);
-  //     enemy.dir = stoi(v[2]);
-  //     enemy.anime_count = stoi(v[3]);
-  //   }
-  // }
-  //cout <<"Came back from moving enemy and now am going to move players"<<endl;
-  //cout<<game_level_<<endl;
-  //if (true){
-  // if (game_mode_ == game_mode::single){
-
-  // }else{
-  //   if (network_state == "server"){
-  //     //string p = receive_in_server(socket_);
-  //     //cout<<"Received "<<p<<endl;
-  //     p1_->move(*maze_, game_mode_,game_level_);
-  //     string s = to_string(p1_->get_pos().x)+","+to_string(p1_->get_pos().y)+","+to_string(p1_->get_dir())+","+to_string(p1_->get_count());
-  //     send_from_server(s,socket_);
-  //     cout<<"Server Player Sent "<<s<<endl;
-  //     string in1 = receive_in_server(socket_);
-  //     cout<<"Server Player Received "<<in1<<endl;
-  //     vector<string> v;
-  //     stringstream ss(in1);
-  //     while (ss.good()) {
-  //         string substr;
-  //         getline(ss, substr, ',');
-  //         v.push_back(substr);
-  //     }
-  //     p2_->set_pos({stoi(v[0]),stoi(v[1])});
-  //     p2_->set_dir(stoi(v[2]));
-  //     p2_->set_count(stoi(v[3]));
-  //   }else{
-  //     // send_from_client("Come",socket_);
-  //     // cout<<"Sent come "<<endl;
-  //     p2_->move(*maze_, game_mode_,game_level_);
-  //     string s = to_string(p2_->get_pos().x)+","+to_string(p2_->get_pos().y)+","+to_string(p2_->get_dir())+","+to_string(p2_->get_count()); 
-  //     send_from_client(s,socket_);
-  //     cout<<"Client Player Sent "<<s<<endl;
-  //     string in2 = receive_in_client(socket_); 
-  //     cout<<"Client Player Received "<<in2<<endl;
-  //     vector<string> v;
-  //     stringstream ss(in2);
-  //     while (ss.good()) {
-  //         string substr;
-  //         getline(ss, substr, ',');
-  //         v.push_back(substr);
-  //     }
-  //     p1_->set_pos({stoi(v[0]),stoi(v[1])});
-  //     p1_->set_dir(stoi(v[2]));
-  //     p1_->set_count(stoi(v[3]));
-  //   }
-  // }
-  //cout<<"Am back from moving players"<<endl;
   if (p1_bullet->present_){
     p1_bullet->draw();
-    if (p1_bullet->pos_.distance(p2_->pos_)<=5){
+    if (p1_bullet->pos_.distance(p2_->pos_)<=5 && game_mode_ == game_mode::multiplayer){
       p2_->set_damaged(true);
       game_state_ = game_state::miss;
       p1_->score_ += 100;
       p1_bullet->present_ = false;
     }
     for(auto &enemy : enemy_->enemies_){
-      //cout<<"Enemy Bullet Distance :"<< enemy.pos.distance(p1_bullet->pos_)<<endl;
       if(enemy.pos.distance(p1_bullet->pos_)<=5){
-        // enemy.pos.x = (enemy.pos.x/20)*20;
-        // enemy.pos.y = (enemy.pos.y/20)*20;
         cout<<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
         p1_->score_ += 100;
         enemy.state = Enemy::enemy_state::lose;
@@ -464,10 +386,7 @@ void Pacman::play_game()  {
       p2_->score_ += 100;
     }
     for(auto &enemy : enemy_->enemies_){
-      //cout<<"Enemy Bullet Distance :"<< enemy.pos.distance(p2_bullet->pos_)<<endl;
       if(enemy.pos.distance(p2_bullet->pos_)<=5){
-        // enemy.pos.x = (enemy.pos.x/20)*20;
-        // enemy.pos.y = (enemy.pos.y/20)*20;
         cout<<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
         enemy.state = Enemy::enemy_state::lose;
         p2_->score_ += 100;
