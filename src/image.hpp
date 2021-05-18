@@ -32,21 +32,21 @@ class ImageManager {
       exit(EXIT_FAILURE);
     }
 
-    load("./data/player1.png", 0);
-    load("./data/player2.png", 1);
-    load("./data/bg_best.png", 2);
+    load("./data/1.png", 0);
+    load("./data/2.png", 1);
+    load("./data/wall.png", 2);
     load("./data/bg_red.png", 3);
     load("./data/bg_green.png", 4);
     load("./data/bg_blue.png", 5);
-    load("./data/food.png", 6);
-    load("./data/food_counter.png", 7);
+    load("./data/Food1.png", 6);
+    load("./data/fc.png", 7);
     load("./data/akabei.png", 8);
     load("./data/pinky.png", 9);
     load("./data/aosuke.png", 10);
     load("./data/guzuta.png", 11);
     load("./data/mon_run.png", 12);
     load("./data/plate.png", 13);
-    load("./data/bullet2.png",14);
+    load("./data/bullet.png",14);
   }
 
    SDL_Texture *get(const unsigned char image_type) const  {

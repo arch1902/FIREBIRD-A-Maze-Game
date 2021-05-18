@@ -197,6 +197,8 @@ void Enemy::move_lose_enemy(Enemy_data &enemy, const Maze &maze, const Player &p
   const unsigned int now_value = maze.get_home_distance(enemy.block);
   int x_ = enemy.block.x;
   int y_ = enemy.block.y;
+  cout<<now_value<<" "<<maze.get_home_distance(Point{x_, y_ - 1})<<" "<< maze.get_home_distance(Point{x_ - 1, y_})<<endl;
+  cout<<maze.get_home_distance(Point{x_ + 1, y_})<<" "<<maze.get_home_distance(Point{x_, y_ + 1})<<endl;
   if (now_value > maze.get_home_distance(Point{x_, y_ - 1})) {
     enemy.next_block.y--;
     cout<<"1"<<endl;

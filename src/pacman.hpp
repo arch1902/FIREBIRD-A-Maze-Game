@@ -42,6 +42,7 @@ class Pacman {
     playing,
     gameover,
     pause,
+    instructions,
   };
 
   const bool fullscreen_mode_;
@@ -73,6 +74,7 @@ class Pacman {
   void game_clear() ;
   void game_miss() ;
   void game_over() ;
+  void game_instructions();
 
    void game_pause()  {
     maze_->draw(game_level_);
@@ -340,7 +342,7 @@ class Pacman {
 
    void run()  {
     while(true) {
-      //cout<<"Game Count : "<<game_count_<<endl;
+      cout<<"Game Count : "<<game_count_<<endl;
       //cout<<network_state<<endl;
       input_manager_->update();
       switch (game_state_) {
@@ -371,6 +373,9 @@ class Pacman {
         case game_state::pause:
           //cout<<"Game State : Pause"<<endl;
           game_pause();
+          break;
+        case game_state::instructions:
+          game_instructions();
           break;
       }
       if (!poll_event()) {

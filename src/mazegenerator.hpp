@@ -30,7 +30,7 @@ int is_loop(int x, int y){
 }
 
 
-string generator(){
+vector<string> generator(){
     srand( time(NULL));
     vector<vector<string>> t1 = maze;
     vector<vector<int> > t2 = visited;
@@ -105,7 +105,22 @@ string generator(){
         //cout<<j<<endl;
         j+=1;
     }
- 
+
+
+    string out1;
+    maze[11][12] = ".";
+    maze[11][11] = ".";
+    for (auto j: maze){
+        for (auto i :j){
+            out1 += i;
+            //cout<<i;
+        }
+        // out += "\"";
+        // out += "\n";
+        //cout<<endl;
+    }
+    maze[11][12] = "#";
+    maze[11][11] = "#";
     int  q = 0;
     while(q<4){
         int x = rand()%22 + 1;
@@ -138,10 +153,10 @@ string generator(){
     maze[12][13] = "E";
     // maze[12][0] = "#";
     // maze[12][23] = "#";
-    string out;
+    string out2;
     for (auto j: maze){
         for (auto i :j){
-            out += i;
+            out2 += i;
             //cout<<i;
         }
         // out += "\"";
@@ -151,6 +166,10 @@ string generator(){
     //cout <<out;
     maze = t1;
     visited = t2;
+
+    vector<string> out;
+    out.push_back(out2);
+    out.push_back(out1);
 
     return out;
 }

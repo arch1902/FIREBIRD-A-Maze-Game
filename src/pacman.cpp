@@ -15,7 +15,6 @@
 #include "bullet.hpp"
 extern string network_state;
 int socket_;
-
 using namespace std;
 
 void Pacman::game_title()  {
@@ -25,7 +24,7 @@ void Pacman::game_title()  {
     const Point title_pos = Point{160, 160};
     const Point p1_mode_pos = Point{270, 300};
     const Point vs_mode_pos = Point{270, 350};
-    const char *title_str = "P  a  c  -  M  a  n";
+    const char *title_str = "F i r e  -  B i r d";
     const char *p1_mode_str = "1 Player";
     const char *vs_mode_str = "2 Player";
     const SDL_Rect p1_str_dst = {250, 298, 112, 26};
@@ -72,6 +71,7 @@ void Pacman::game_title()  {
       }
       case 4: {
         draw_text(0, rgb::black, title_pos, title_str);
+        //draw_text(1, rgb::black, title_pos, "P l e a s e   W a i t");
 
         switch (game_mode_) {
           case game_mode::single: {
@@ -90,10 +90,20 @@ void Pacman::game_title()  {
           }
         }
 
+        if (input_manager_->press_key_p(0, 6)){
+          game_state_ = game_state::instructions;
+          game_count_ = 0;
+        }
+
+
         if ( input_manager_->press_key_p(0, 4)) {
             if (game_mode_ == game_mode::multiplayer){
               if (network_state=="server"){
+                wipe_->draw(640);
+                SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
+                SDL_RenderFillRect(renderer_, &p1_str_dst);
                 socket_ = start_server();
+                cout<<"After starting"<<endl;
               }else if(network_state == "client"){
                 socket_ = connect_client();
               }else{
@@ -102,7 +112,10 @@ void Pacman::game_title()  {
               }
               if (network_state=="server"){
                 send_from_server("hey_there",socket_);
+                cout<<"Before receive"<<endl;
+                
                 string xyz = receive_in_server(socket_);
+                cout<<"After receive"<<endl;
                 cout<<"Received "<<xyz<<endl;
               }else{
                 send_from_client("hello_server",socket_);
@@ -114,6 +127,7 @@ void Pacman::game_title()  {
             wipe_->draw(640);
             game_count_++;
         }
+
 
         if (input_manager_->press_key_p(0, 1) || input_manager_->press_key_p(1, 1)) {
           game_mode_ = game_mode::multiplayer;
@@ -532,6 +546,144 @@ void Pacman::game_miss()  {
     }
   }
 }
+
+void Pacman::game_instructions()  {
+  SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
+  SDL_RenderClear(renderer_);
+
+  const Point gameover_pos = Point{165, 50};
+  const char *gameover_str = "G a m e I n s ";
+  switch (game_mode_) {
+    case game_mode::single: {
+      switch (game_count_) {
+        case 0: {
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
+          wipe_->set_wipe_in();
+          wipe_->draw(640);
+          game_count_++;
+          break;
+        }
+        case 1: {
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
+          wipe_->draw(640);
+          if (wipe_->update()) {
+            game_count_++;
+          }
+          break;
+        }
+        case 2: {
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
+          stringstream ss;
+          ss << "These are the set of Instructions" ;
+          draw_text(1, rgb::black, Point{120, 220}, ss.str().c_str());
+
+          if (blink_count_ < 30) {
+            draw_text(1, rgb::black, Point{210, 350}, "Press 'I' Key to Return");
+            blink_count_++;
+          } else if (blink_count_ < 60) {
+            blink_count_++;
+          } else {
+            blink_count_ = 0;
+          }
+
+          if (input_manager_->press_key_p(0, 6)) {
+            game_count_++;
+            wipe_->set_wipe_out();
+            wipe_->draw(640);
+          }
+          break;
+        }
+        case 3: {
+          wipe_->draw(640);
+          if (wipe_->update()) {
+            blink_count_ = 0;
+            game_count_ = 0;
+            game_state_ = game_state::title;
+            Mix_HaltMusic();
+          }
+          break;
+        }
+        default:
+          break;
+      }
+      break;
+    }
+    case game_mode::multiplayer: {
+      switch (game_count_) {
+        case 0: {
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
+          wipe_->set_wipe_in();
+          wipe_->draw(640);
+          game_count_++;
+          break;
+        }
+        case 1: {
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
+          wipe_->draw(640);
+          if (wipe_->update()) {
+            game_count_++;
+          }
+          break;
+        }
+        case 2: {
+          draw_text(0, rgb::red, gameover_pos, gameover_str);
+          stringstream ss;
+          const unsigned int p1_score = p1_->get_score();
+          const unsigned int p2_score = p2_->get_score();
+          if (p1_score > p2_score) {
+            ss << "P 1  W I N S  : " << p1_score;
+            draw_text(0, rgb::black, Point{170, 240},
+                      ss.str().c_str());
+          } else if (p1_score < p2_score) {
+            ss << "P 2  W I N S  : " << p2_score;
+            draw_text(0, rgb::black, Point{170, 240},
+                      ss.str().c_str());
+          } else {
+            ss << "D R A W  " << p1_score;
+            draw_text(0, rgb::black, Point{170, 240},
+                      ss.str().c_str());
+          }
+
+          if (blink_count_ < 30) {
+            draw_text(1, rgb::black, Point{210, 380}, "P r e s s  S p a c e  K e y");
+            blink_count_++;
+          } else if (blink_count_ < 60) {
+            blink_count_++;
+          } else {
+            blink_count_ = 0;
+          }
+
+          if (input_manager_->press_key_p(0, 4)) {
+            game_count_++;
+            wipe_->set_wipe_out();
+            wipe_->draw(640);
+          }
+          break;
+        }
+        case 3: {
+          wipe_->draw(640);
+          if (wipe_->update()) {
+            blink_count_ = 0;
+            game_count_ = 0;
+            game_state_ = game_state::title;
+          }
+          break;
+        }
+        default:
+          break;
+      }
+      break;
+    }
+  }
+}
+
+
+
+
+
+
+
+
 
 void Pacman::game_over()  {
   SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);

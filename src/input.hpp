@@ -7,17 +7,17 @@
 
 class InputManager {
 
-  bool edge_key_[2][6];
-  bool press_key_[2][6];
+  bool edge_key_[2][7];
+  bool press_key_[2][7];
 
  public:
   InputManager()  {}
 
    void update()  {
     int num_devices_ = 2;
-    bool new_press_key[num_devices_][6];
+    bool new_press_key[num_devices_][7];
     for (int i = 0; i < num_devices_; ++i) {
-      for (int j = 0; j < 6; ++j) {
+      for (int j = 0; j < 7; ++j) {
         new_press_key[i][j] = false;
       }
     }
@@ -38,14 +38,17 @@ class InputManager {
     new_press_key[1][1] = state[SDL_SCANCODE_DOWN] == SDL_PRESSED;
     new_press_key[1][2] = state[SDL_SCANCODE_LEFT] == SDL_PRESSED;
     new_press_key[1][3] = state[SDL_SCANCODE_RIGHT] == SDL_PRESSED;
+
+    new_press_key[0][6] = state[SDL_SCANCODE_I] == SDL_PRESSED;
+    new_press_key[1][6] = state[SDL_SCANCODE_I] == SDL_PRESSED;
   
-    new_press_key[0][5] = state[SDL_SCANCODE_RETURN] == SDL_PRESSED;
-    new_press_key[1][5] = state[SDL_SCANCODE_RETURN] == SDL_PRESSED;
+    new_press_key[0][5] = state[SDL_SCANCODE_LSHIFT] == SDL_PRESSED;
+    new_press_key[1][5] = state[SDL_SCANCODE_LSHIFT] == SDL_PRESSED;
     new_press_key[0][4] = state[SDL_SCANCODE_SPACE] == SDL_PRESSED;
     new_press_key[1][4] = state[SDL_SCANCODE_SPACE] == SDL_PRESSED;
 
     for (int i = 0; i < num_devices_; ++i) {
-      for (int j = 0; j < 6; ++j) {
+      for (int j = 0; j < 7; ++j) {
         edge_key_[i][j] = !press_key_[i][j] && new_press_key[i][j];
         press_key_[i][j] = new_press_key[i][j];
       }
