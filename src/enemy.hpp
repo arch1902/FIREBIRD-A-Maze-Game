@@ -28,9 +28,9 @@ class Enemy {
     Point pos;
     Point block;
     Point next_block;
-    int dir;           // max value is 4
+    int dir;           // max value is 4 direction + choose image out of 4
     int anime_count;   // 0 or 1
-    int anime_weight;  // max value is 8
+    int anime_weight;  // max value is 8 feeling that enemy is liquidy
     enemy_state state;
 
     Enemy_data(const unsigned char enemy_type) : type(enemy_type) {}
@@ -116,32 +116,6 @@ class Enemy {
       } else {
         move_normal_enemy(enemy, maze,game_level, p1, p2);
       }
-      // if (network_state == "server"){
-      //   string s;
-      //   s = to_string(enemy.pos.x) + "," + to_string(enemy.pos.y) +","+to_string(enemy.dir)+","+to_string(enemy.anime_count)+","+to_string(enemy.type);
-      //   cout<<"Server Enemy Sending "<<s<<endl;
-      //   send_from_server(s,socket_);
-      //   string dump = receive_in_server(socket_);
-      //   string if_received = receive_in_server(socket_);
-      //   //cout<<dump<<endl;
-      // }else{
-      //   send_from_client("Come",socket_);
-      //   string in = receive_in_client(socket_);
-      //   send_from_client("Got it",socket_);
-      //   cout<<"Cient Enemy Receive "<<in<<endl;
-      //   vector<string> v;
-      //   stringstream ss(in);
-      //   while (ss.good()) {
-      //       string substr;
-      //       getline(ss, substr, ',');
-      //       v.push_back(substr);
-      //   }
-      //   cout << (enemy.type == stoi(v[4]))<<endl;
-      //   enemy.pos.x = stoi(v[0]);
-      //   enemy.pos.y = stoi(v[1]);
-      //   enemy.dir = stoi(v[2]);
-      //   enemy.anime_count = stoi(v[3]);
-      // }
     }
   }
   bool check_hit_enemy(const game_mode mode, Player &p1, Player &p2) ;

@@ -8,7 +8,7 @@
 #include "server.hpp"
 
 std::string network_state;
-int socket_;
+extern int socket_;
 
 
 using namespace std;
@@ -65,24 +65,6 @@ int main(int argc, char **argv) {
   //bool is_fullscreen = parse_options(argc, argv);
   network_state = argv[1];
   cout<<network_state<<endl;
-  if (network_state=="server"){
-    socket_ = start_server();
-  }else if(network_state == "client"){
-    socket_ = connect_client();
-  }else{
-    cout<<"Invalid Argument"<<endl;
-    exit(-1);
-  }
-
-  if (network_state=="server"){
-    send_from_server("hey_there",socket_);
-    string xyz = receive_in_server(socket_);
-    cout<<"Received "<<xyz<<endl;
-  }else{
-    send_from_client("hello_server",socket_);
-    string abc = receive_in_client(socket_);
-    cout<<"Received "<<abc<<endl;
-  }
   const string network_mode = network_state;
   Pacman pacman(false);
   pacman.run();

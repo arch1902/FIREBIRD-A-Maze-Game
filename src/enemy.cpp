@@ -87,7 +87,6 @@ void Enemy::move_normal_enemy(Enemy_data &enemy,const Maze &maze,int game_level,
     return;
   }
 
-
   if (move_to_front_block_p && move_to_left_block_p && move_to_right_block_p) {
     int next = rand() % 3;
     if (next == 0) {
@@ -177,14 +176,18 @@ void Enemy::move_lose_enemy(Enemy_data &enemy, const Maze &maze, const Player &p
   }
 
   const Point dst_pos = {enemy.next_block.x * 20,enemy.next_block.y * 20};
+  cout <<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
+  cout <<"Destination pos "<<dst_pos.x<<","<<dst_pos.y<<endl;
   if (enemy.pos != dst_pos) {
     update();
 
     const int move_value = 2;
-    if (dst_pos.x > enemy.pos.x) enemy.pos.x += move_value;
+    if (abs(dst_pos.x-enemy.pos.x)<2) enemy.pos.x = dst_pos.x;
+    else if (dst_pos.x > enemy.pos.x) enemy.pos.x += move_value;
     else if (dst_pos.x < enemy.pos.x) enemy.pos.x -= move_value;
 
-    if (dst_pos.y > enemy.pos.y) enemy.pos.y += move_value;
+    if (abs(dst_pos.y-enemy.pos.y)<2) enemy.pos.y = dst_pos.y;
+    else if (dst_pos.y > enemy.pos.y) enemy.pos.y += move_value;
     else if (dst_pos.y < enemy.pos.y) enemy.pos.y -= move_value;
 
     return;
@@ -196,24 +199,28 @@ void Enemy::move_lose_enemy(Enemy_data &enemy, const Maze &maze, const Player &p
   int y_ = enemy.block.y;
   if (now_value > maze.get_home_distance(Point{x_, y_ - 1})) {
     enemy.next_block.y--;
+    cout<<"1"<<endl;
     return;
   }
 
   if (now_value > maze.get_home_distance(Point{x_ - 1, y_})) {
     enemy.next_block.x--;
+    cout<<"2"<<endl;
     return;
   }
 
   if (now_value > maze.get_home_distance(Point{x_ + 1, y_})) {
     enemy.next_block.x++;
+    cout<<"3"<<endl;
     return;
   }
 
   if (now_value > maze.get_home_distance(Point{x_, y_ + 1})) {
     enemy.next_block.y++;
+    cout<<"4"<<endl;
     return;
   }
-
+  cout<<"Oops"<<endl;
 }
 
 bool Enemy::check_hit_enemy(const game_mode mode, Player &p1, Player &p2)  {
@@ -223,7 +230,7 @@ bool Enemy::check_hit_enemy(const game_mode mode, Player &p1, Player &p2)  {
   for (auto &enemy : enemies_) {
     int d = pos.distance(enemy.pos);
     if (d < Hit_distance) {
-      if (p1.get_power_mode() == 0) {
+      if (p1.get_power_mode() == 0 && enemy.state != enemy_state::lose) {
         p1.set_damaged(true);
         return true;
       }
@@ -242,7 +249,7 @@ bool Enemy::check_hit_enemy(const game_mode mode, Player &p1, Player &p2)  {
     for (auto &enemy : enemies_) {
       int d = pos.distance(enemy.pos);
       if (d < Hit_distance) {
-        if (p2.get_power_mode() == 0) {
+        if (p2.get_power_mode() == 0 && enemy.state != enemy_state::lose) {
           p2.set_damaged(true);
           return true;
         }

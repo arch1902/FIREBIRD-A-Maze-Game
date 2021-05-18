@@ -1,10 +1,12 @@
+#pragma once
+
+#include <math.h>
+#include <stdlib.h>
+#include <string>
+#include <queue>
 #include <iostream>
 #include <vector>
-#include <stdlib.h> 
 #include <ctime>
-#include <string>
-using namespace std;
-
 
 vector<vector<string> > maze;
 vector<vector<int> > visited;
@@ -29,7 +31,9 @@ int is_loop(int x, int y){
 
 
 string generator(){
-    srand ( time(NULL) );
+    srand( time(NULL));
+    vector<vector<string>> t1 = maze;
+    vector<vector<int> > t2 = visited;
     vector<string> temp;
     vector< vector<int> >temp3;
     vector<int> temp2;
@@ -58,6 +62,20 @@ string generator(){
             maze[11+i][8+j] = "#";
         }
     }
+     maze[11][1] = "#";
+    // maze[11][2] = "#";
+    // maze[11][3] = "#";
+    maze[11][22] = "#";
+    // maze[11][21] = "#";
+    // maze[11][20] = "#"; 
+    maze[13][1] = "#";
+    // maze[13][2] = "#";
+    // maze[13][3] = "#";
+    maze[13][22] = "#";
+    // maze[13][21] = "#";
+    // maze[13][20] = "#";
+
+
     // for (auto j: maze){
     //     for (auto i :j){
     //         cout<<i;
@@ -80,7 +98,7 @@ string generator(){
         maze[x][y] = "#";
         visited = temp3;
         //cout<<is_loop(12,0)<<endl;
-        if(is_loop(12,0) != 461-j){
+        if(is_loop(12,0) != 457-j){
             maze[x][y] = ".";
             continue;
         }
@@ -98,12 +116,15 @@ string generator(){
         maze[x][y] = "C";
         q=q+1;        
     }
-    maze[12][1] = "=";
-    maze[12][2] = "=";
-    maze[12][3] = "=";
-    maze[12][22] = "=";
-    maze[12][21] = "=";
-    maze[12][20] = "=";  
+    // maze[12][1] = "=";
+    // maze[12][2] = "=";
+    // maze[12][3] = "=";
+    // maze[12][22] = "=";
+    // maze[12][21] = "=";
+    // maze[12][20] = "="; 
+
+
+
     maze[12][0] = "L";
     maze[12][23] = "R"; 
     maze[18][9] = "P";
@@ -128,6 +149,8 @@ string generator(){
         //cout<<endl;
     }
     //cout <<out;
+    maze = t1;
+    visited = t2;
+
     return out;
 }
-

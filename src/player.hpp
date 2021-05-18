@@ -135,17 +135,17 @@ class Player {
         || dst_right_block_state == maze_state::left_warp_pos
         || dst_block_state == maze_state::right_warp_pos
         || dst_left_block_state == maze_state::right_warp_pos) {
-      next_block_ = dst_block;
+          if(!(dst_block == Point {11,23}||dst_block == Point {13,0})){
+            next_block_ = dst_block;
+          }
     }
 
     // Circle corner
-    if (maze.check_state(Point{dst_block.x + 2, dst_block.y})
-        == maze_state::left_warp_pos) {
+    if (maze.check_state(Point{dst_block.x + 2, dst_block.y}) == maze_state::left_warp_pos && dir_ == 1) {
       next_block_.x = 24;
       pos_.x = 20 * next_block_.x;
     }
-    if (maze.check_state(Point{dst_block.x - 2, dst_block.y})
-        == maze_state::right_warp_pos) {
+    if (maze.check_state(Point{dst_block.x - 2, dst_block.y}) == maze_state::right_warp_pos && dir_ == 3) {
       next_block_.x = -1;
       pos_.x = 20 * next_block_.x;
     }

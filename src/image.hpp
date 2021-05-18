@@ -34,7 +34,7 @@ class ImageManager {
 
     load("./data/player1.png", 0);
     load("./data/player2.png", 1);
-    load("./data/bg.png", 2);
+    load("./data/bg_best.png", 2);
     load("./data/bg_red.png", 3);
     load("./data/bg_green.png", 4);
     load("./data/bg_blue.png", 5);
