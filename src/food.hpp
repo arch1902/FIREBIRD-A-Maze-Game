@@ -7,6 +7,7 @@
 #include "maze.hpp"
 #include "mixer.hpp"
 #include "player.hpp"
+extern bool music;
 
 class Food {
   enum class food_state {
@@ -75,7 +76,7 @@ class Food {
     Point block = {posi.x/20,posi.y/20};
     switch (food_[block.y][block.x]) {
       case food_state::food: {
-        if (false){
+        if (music){
         Mix_PlayChannel(3, mixer_manager_->get_sound(3),0);
         }
         food_[block.y][block.x] = food_state::nothing;
@@ -96,7 +97,7 @@ class Food {
       Point block = {posi.x/20,posi.y/20};
       switch (food_[block.y][block.x]) {
         case food_state::food: {
-          if(false){
+          if(music){
             Mix_PlayChannel(3, mixer_manager_->get_sound(3), 0);
           }
           food_[block.y][block.x] = food_state::nothing;
@@ -115,7 +116,7 @@ class Food {
 
     if ((p1.get_power_mode() != 0 && p1.get_power_mode() % 80 == 0)
         || (p2.get_power_mode() != 0 && p2.get_power_mode() % 80 == 0)) {
-          if (false){
+          if (music){
             Mix_PlayChannel(0, mixer_manager_->get_sound(0),0);
           }
     }

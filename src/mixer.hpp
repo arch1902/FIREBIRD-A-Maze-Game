@@ -9,7 +9,7 @@ using namespace std;
 
 class MixerManager {
     Mix_Music *music_;
-    Mix_Chunk *sound_list_[5];
+    Mix_Chunk *sound_list_[6];
 
    void load_music(const char *path)  {
       music_ = Mix_LoadMUS(path);
@@ -34,12 +34,13 @@ class MixerManager {
           exit(EXIT_FAILURE);
       }
 
-    load_music("./data/luminousparticle.wav");
-    load_sound("./data/66376e_Pacman_Siren_Sound_Effect.wav", 0);
-    load_sound("./data/pacman_beginning.wav", 1);
-    load_sound("./data/pacman_death.wav", 2);
-    load_sound("./data/pacman_chomp.wav", 3);
-    load_sound("./data/gun-gird1.wav", 4);
+    load_music("./data/theme.wav");
+    load_sound("./data/powerup.wav", 0);
+    load_sound("./data/begin.wav", 1);
+    load_sound("./data/death.wav", 2);
+    load_sound("./data/chomp.wav", 3);
+    load_sound("./data/bump.wav", 4);
+    load_sound("./data/cannon.wav",5);
   }
 
    Mix_Music *get_music() const  { return music_; }
