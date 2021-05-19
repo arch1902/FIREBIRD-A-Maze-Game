@@ -92,19 +92,27 @@ class Pacman {
 
    void draw_text(const unsigned char font_size, const RGB &rgb,
                         const Point &p, const char *str) const  {
+    //cout<<"1"<<endl;
     const SDL_Color color = {rgb.r, rgb.g, rgb.b, 255};
+    //cout<<"11"<<endl;
     SDL_Surface *font_surface =
         TTF_RenderUTF8_Blended(font_manager_.get(font_size), str, color);
+    //cout<<"111"<<endl;
     SDL_Texture *font_texture =
         SDL_CreateTextureFromSurface(renderer_, font_surface);
+    //cout<<"1111"<<endl;
     const SDL_Rect src = {0, 0, static_cast<Uint16>(font_surface->w),
                           static_cast<Uint16>(font_surface->h)};
+    //cout<<"11111"<<endl;
     SDL_Rect dst;
     dst.x = static_cast<Sint16>(p.x);
     dst.y = static_cast<Sint16>(p.y);
     SDL_QueryTexture(font_texture, nullptr, nullptr, &dst.w, &dst.h);
+    //cout<<"111111"<<endl;
     SDL_RenderCopy(renderer_, font_texture, &src, &dst);
+    //cout<<"1111111"<<endl;
     SDL_DestroyTexture(font_texture);
+    //cout<<"END"<<endl;
   }
 
    void draw_text(const unsigned char font_size, const RGB &&rgb,
@@ -185,7 +193,7 @@ class Pacman {
       if (p1_->get_power_mode()) {
         SDL_SetRenderDrawColor(renderer_, 255, 255, 0, 255);
         const SDL_Rect dst = {
-            x, y-270, static_cast<Uint16>(p1_->get_power_mode() / 4), 20};
+            x, y-260, static_cast<Uint16>(p1_->get_power_mode() / 4), 20};
         SDL_RenderFillRect(renderer_, &dst);
       }
       if (p2_->get_power_mode()) {

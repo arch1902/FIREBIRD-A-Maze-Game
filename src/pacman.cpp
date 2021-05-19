@@ -16,6 +16,7 @@
 extern string network_state;
 int socket_;
 bool music = true;
+int c = 1;
 using namespace std;
 
 void Pacman::game_title()  {
@@ -116,34 +117,42 @@ void Pacman::game_title()  {
 
         if ( input_manager_->press_key_p(0, 4)) {
             if (game_mode_ == game_mode::multiplayer){
-              if (network_state=="server"){
+              if(c == 2){      
+                if (network_state=="server"){
+                  socket_ = start_server();
+                  cout<<"After starting"<<endl;
+                }else if(network_state == "client"){
+                  cout<<"Trying to connect"<<endl;
+                  socket_ = connect_client();
+                }else{
+                  cout<<"Invalid Argument"<<endl;
+                  exit(-1);
+                }
+                if (network_state=="server"){
+                  send_from_server("hey_there",socket_);
+                  cout<<"Before receive"<<endl;
+                  
+                  string xyz = receive_in_server(socket_);
+                  cout<<"After receive"<<endl;
+                  cout<<"Received "<<xyz<<endl;
+                }else{
+                  send_from_client("hello_server",socket_);
+                  string abc = receive_in_client(socket_);
+                  cout<<"Received "<<abc<<endl;
+                }
+                wipe_->set_wipe_out();
                 wipe_->draw(640);
-                SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
-                SDL_RenderFillRect(renderer_, &p1_str_dst);
-                socket_ = start_server();
-                cout<<"After starting"<<endl;
-              }else if(network_state == "client"){
-                socket_ = connect_client();
-              }else{
-                cout<<"Invalid Argument"<<endl;
-                exit(-1);
+                game_count_++;
               }
-              if (network_state=="server"){
-                send_from_server("hey_there",socket_);
-                cout<<"Before receive"<<endl;
-                
-                string xyz = receive_in_server(socket_);
-                cout<<"After receive"<<endl;
-                cout<<"Received "<<xyz<<endl;
-              }else{
-                send_from_client("hello_server",socket_);
-                string abc = receive_in_client(socket_);
-                cout<<"Received "<<abc<<endl;
-              }
+              draw_text(1,rgb::red,{150, 400},"Please wait for the Player 2 to connect");
+              c+=1;
             }
-            wipe_->set_wipe_out();
-            wipe_->draw(640);
-            game_count_++;
+            if (game_mode_ == game_mode::single){
+              wipe_->set_wipe_out();
+              wipe_->draw(640);
+              game_count_++;
+            }
+
         }
 
 
