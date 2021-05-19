@@ -17,6 +17,7 @@ extern string network_state;
 int socket_;
 bool music = true;
 int c = 1;
+bool disconnected;
 int connection_number;
 using namespace std;
 
@@ -330,14 +331,22 @@ void Firebird::play_game()  {
           getline(ss, substr, ',');
           v.push_back(substr);
       }
-      p2_->set_pos({stoi(v[0]),stoi(v[1])});
-      p2_->set_dir(stoi(v[2]));
-      p2_->set_count(stoi(v[3]));
-      p2_bullet->present_ = (stoi(v[4]) == 1) ? true :false;
-      p2_bullet->pos_.x = stoi(v[5]);
-      p2_bullet->pos_.y = stoi(v[6]);
-      p2_bullet->dir_ = stoi(v[7]);
-      p2_->score_ = stoi(v[8]);
+      if (v.size()!=9){
+        game_count_ = 0;
+        blink_count_ = 0;
+        game_state_ = game_state::gameover;
+        disconnected = true;
+      }else{
+        //cout<<"S "<<v.size()<<endl;
+        p2_->set_pos({stoi(v[0]),stoi(v[1])});
+        p2_->set_dir(stoi(v[2]));
+        p2_->set_count(stoi(v[3]));
+        p2_bullet->present_ = (stoi(v[4]) == 1) ? true :false;
+        p2_bullet->pos_.x = stoi(v[5]);
+        p2_bullet->pos_.y = stoi(v[6]);
+        p2_bullet->dir_ = stoi(v[7]);
+        p2_->score_ = stoi(v[8]);
+      }
     }else{
         string j = (p2_bullet->present_) ? "1":"0";
         string s = to_string(p2_->get_pos().x)+","+to_string(p2_->get_pos().y)+","+to_string(p2_->get_dir())+","+to_string(p2_->get_count())+",";
@@ -354,21 +363,29 @@ void Firebird::play_game()  {
             v.push_back(substr);
         }
         int i = 0;
-        for(auto &enemy : enemy_->enemies_){
-          enemy.pos.x = stoi(v[i++]);
-          enemy.pos.y = stoi(v[i++]);
-          enemy.dir = stoi(v[i++]);
-          enemy.anime_count = stoi(v[i++]);
+        if (v.size()!= 25){
+          game_count_ = 0;
+          blink_count_ = 0;
+          game_state_ = game_state::gameover;
+          disconnected = true;
         }
-        p1_->set_pos({stoi(v[i]),stoi(v[i+1])});
-        p1_->set_dir(stoi(v[i+2]));
-        p1_->set_count(stoi(v[i+3]));
-        i = i+4;
-        p1_bullet->present_ = (stoi(v[i++]) == 1) ? true :false;
-        p1_bullet->pos_.x = stoi(v[i++]);
-        p1_bullet->pos_.y = stoi(v[i++]);
-        p1_bullet->dir_ = stoi(v[i++]);
-        p1_->score_ = stoi(v[i++]);
+        else{
+          for(auto &enemy : enemy_->enemies_){
+            enemy.pos.x = stoi(v[i++]);
+            enemy.pos.y = stoi(v[i++]);
+            enemy.dir = stoi(v[i++]);
+            enemy.anime_count = stoi(v[i++]);
+          }
+          p1_->set_pos({stoi(v[i]),stoi(v[i+1])});
+          p1_->set_dir(stoi(v[i+2]));
+          p1_->set_count(stoi(v[i+3]));
+          i = i+4;
+          p1_bullet->present_ = (stoi(v[i++]) == 1) ? true :false;
+          p1_bullet->pos_.x = stoi(v[i++]);
+          p1_bullet->pos_.y = stoi(v[i++]);
+          p1_bullet->dir_ = stoi(v[i++]);
+          p1_->score_ = stoi(v[i++]);
+        }
     }
   }
 
@@ -675,32 +692,37 @@ void Firebird::game_over()  {
         case 2: {
           draw_text(0, rgb::red, gameover_pos, gameover_str);
           stringstream ss;
-          const unsigned int p1_score = p1_->get_score();
-          const unsigned int p2_score = p2_->get_score();
-          if (p1_score > p2_score) {
-            if (network_state == "server"){
-              ss << "Y O U  W I N :) => " << p1_score;
-              draw_text(0, rgb::black, Point{100, 240},
-                        ss.str().c_str());
-            }else{
-              ss << "Y O U  L O S E :( => " << p2_score;
-              draw_text(0, rgb::black, Point{100, 240},
+          if (disconnected){
+            ss <<  "Unfortunately the other player got disconnected :((";
+            draw_text(1, rgb::black, Point{100, 240},ss.str().c_str());
+          }else{
+            const unsigned int p1_score = p1_->get_score();
+            const unsigned int p2_score = p2_->get_score();
+            if (p1_score > p2_score) {
+              if (network_state == "server"){
+                ss << "Y O U  W I N :) => " << p1_score;
+                draw_text(0, rgb::black, Point{100, 240},
+                          ss.str().c_str());
+              }else{
+                ss << "Y O U  L O S E :( => " << p2_score;
+                draw_text(0, rgb::black, Point{100, 240},
+                          ss.str().c_str());
+              }
+            } else if (p1_score < p2_score) {
+              if (network_state == "client"){
+                ss << "Y O U  W I N :) => " << p2_score;
+                draw_text(0, rgb::black, Point{100, 240},
+                          ss.str().c_str());
+              }else{
+                ss << "Y O U  L O S E :( => " << p1_score;
+                draw_text(0, rgb::black, Point{100, 240},
+                          ss.str().c_str());
+              }
+            } else {
+              ss << "D R A W  " << p1_score;
+              draw_text(0, rgb::black, Point{170, 240},
                         ss.str().c_str());
             }
-          } else if (p1_score < p2_score) {
-            if (network_state == "client"){
-              ss << "Y O U  W I N :) => " << p2_score;
-              draw_text(0, rgb::black, Point{100, 240},
-                        ss.str().c_str());
-            }else{
-              ss << "Y O U  L O S E :( => " << p1_score;
-              draw_text(0, rgb::black, Point{100, 240},
-                        ss.str().c_str());
-            }
-          } else {
-            ss << "D R A W  " << p1_score;
-            draw_text(0, rgb::black, Point{170, 240},
-                      ss.str().c_str());
           }
 
           if (blink_count_ < 30) {
@@ -713,11 +735,12 @@ void Firebird::game_over()  {
           }
 
           if (input_manager_->press_key_p(0, 4)) {
-            cout<<"here 1"<<endl;
+            //cout<<"here 1"<<endl;
             if (network_state == "server"){close_connection_server(socket_);}
             if (network_state == "client"){close_connection_client(socket_);}
-            cout<<"here 11"<<endl;
+            //cout<<"here 11"<<endl;
             game_count_++;
+            disconnected = false;
             wipe_->set_wipe_out();
             wipe_->draw(640);
           }
