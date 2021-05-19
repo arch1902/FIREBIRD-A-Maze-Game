@@ -6,10 +6,10 @@ Use ```./firebird-sdl server``` to play the game.
 ### For Multiplayer
 * The first player will have to start the game using ```./firebird-sdl server``` and then select the two player option.
 * The second player will have to run the command ```./firebird-sdl client``` and then select the two player option.  
-On doing this the game would start for both the players.
+On doing this, the game would start for both the players.
 
 ## Libraries and Packages 
-The following pakages and libraries were used in the project:
+The following packages and libraries were used in the project:
 * sdl2          ```brew install sdl2```
 * sdl2_mixer    ```brew install sdl2_mixer```
 * sdl2_image   ```brew install sdl2_image```
