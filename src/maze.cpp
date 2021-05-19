@@ -44,7 +44,7 @@ maze_state char_to_maze_state(const char c) {
 }
 
 void Maze::init(const game_mode mode)  {
-  cout<<"1"<<endl;
+  //cout<<"1"<<endl;
   string s;
   // if (mode == game_mode::multiplayer){
   //   cout<<"2"<<endl;
@@ -67,25 +67,25 @@ void Maze::init(const game_mode mode)  {
   // }
   vector<string> map_ = generator();
   if (mode == game_mode::multiplayer){
-    cout<<"2"<<endl;
+    //cout<<"2"<<endl;
     cout<<network_state<<endl;
     if (network_state == "server"){
-      cout<<"3"<<endl;
+      //cout<<"3"<<endl;
       s = map_[0];
       send_from_server(s,socket_);
       string in = receive_in_server(socket_);
-      cout<<"Sent"<<endl;
+      //cout<<"Sent"<<endl;
     }else{
-      cout<<"5"<<endl;
+      //cout<<"5"<<endl;
       send_from_client("Aane do!",socket_);
       s = receive_in_client(socket_);
-      cout<<"Received\n"<<s<<endl;
+      //cout<<"Received\n"<<s<<endl;
     }
   }else{
-    cout<<"6"<<endl;
+    //cout<<"6"<<endl;
     s = map_[0];
   }
-  cout<<"7"<<endl;
+  //cout<<"7"<<endl;
   const string block_src = s;
   // const string block_src =
   //     "########################"
@@ -236,26 +236,26 @@ void Maze::init(const game_mode mode)  {
       que.push(e);
     }
   }
-  for (auto j : home_distance_){
-    for (int i = 0;i<24;i++){
-      if (j[i] != maze_max_num){
-        if (j[i]<=9){
-          cout<<"0"<<j[i]<<",";
-        }else{
-          cout<<j[i]<<",";
-        }
-      }else{
-        cout<<"__,";
-      }
-    }
-    cout<<endl;
-  }
-  for (int j = 0;j<24;j++){
-    for (int i = 0;i<24;i++){
-      cout<<block_src[j*24+i]<<",";
-    }
-    cout<<endl;
-  }
+  // for (auto j : home_distance_){
+  //   for (int i = 0;i<24;i++){
+  //     if (j[i] != maze_max_num){
+  //       if (j[i]<=9){
+  //         cout<<"0"<<j[i]<<",";
+  //       }else{
+  //         cout<<j[i]<<",";
+  //       }
+  //     }else{
+  //       cout<<"__,";
+  //     }
+  //   }
+  //   cout<<endl;
+  // }
+  // for (int j = 0;j<24;j++){
+  //   for (int i = 0;i<24;i++){
+  //     cout<<block_src[j*24+i]<<",";
+  //   }
+  //   cout<<endl;
+  // }
 }
 
 void Maze::draw(const unsigned int game_level) const  {

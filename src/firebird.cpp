@@ -1,4 +1,4 @@
-#include "pacman.hpp"
+#include "firebird.hpp"
 #include <SDL2/SDL_mixer.h>
 #include <time.h>
 #include <sstream>
@@ -17,9 +17,10 @@ extern string network_state;
 int socket_;
 bool music = true;
 int c = 1;
+int connection_number;
 using namespace std;
 
-void Pacman::game_title()  {
+void Firebird::game_title()  {
     SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
     SDL_RenderClear(renderer_);
 
@@ -120,6 +121,7 @@ void Pacman::game_title()  {
               if(c == 2){      
                 if (network_state=="server"){
                   socket_ = start_server();
+                  connection_number ++;
                   cout<<"After starting"<<endl;
                 }else if(network_state == "client"){
                   cout<<"Trying to connect"<<endl;
@@ -185,9 +187,9 @@ void Pacman::game_title()  {
         //cout<<network_state<<endl;
         // initialize globals
         if (wipe_->update()) {
-          cout<<"here1"<<endl;
+          //cout<<"here1"<<endl;
           maze_->init(game_mode_);
-          cout<<"here2"<<endl;
+          //cout<<"here2"<<endl;
           food_->init(*maze_);
           enemy_->init();
           p1_->init_pos();
@@ -217,7 +219,7 @@ void Pacman::game_title()  {
     }
 }
 
-void Pacman::game_start()  {
+void Firebird::game_start()  {
   maze_->draw(game_level_);
   food_->draw();
   enemy_->draw();
@@ -263,7 +265,7 @@ void Pacman::game_start()  {
   }
 }
 
-void Pacman::play_game()  {
+void Firebird::play_game()  {
   maze_->draw(game_level_);
   food_->draw();
   enemy_->draw();
@@ -283,7 +285,7 @@ void Pacman::play_game()  {
       //cout<<"Pos P2"<<p2_->pos_.x<<" , "<<p2_->pos_.y<<endl;
     }
     if (!p1_bullet->present_ && input_manager_->edge_key_p(0, 5)){
-      cout<<"Player 1 fired a bullet"<<endl;
+      //cout<<"Player 1 fired a bullet"<<endl;
       //p1_->score_ = std::max(p1_->score_-10,0);
       p1_->score_ = (p1_->score_ >10) ? p1_->score_-10:0;
       if (music){
@@ -298,7 +300,7 @@ void Pacman::play_game()  {
       p2_bullet->move(*maze_);
     }
     if (!p2_bullet->present_ && input_manager_->edge_key_p(1, 5)){
-      cout<<"Player 2 fired a bullet"<<endl;
+      //cout<<"Player 2 fired a bullet"<<endl;
       p2_->score_ = (p2_->score_ >10) ? p2_->score_-10:0;
       if (music){
           Mix_PlayChannel(-1,mixer_manager_->get_sound(5), 0);
@@ -316,7 +318,8 @@ void Pacman::play_game()  {
         s = s + to_string(enemy.pos.x) + "," + to_string(enemy.pos.y) +","+to_string(enemy.dir)+","+to_string(enemy.anime_count)+",";
       }
       s += to_string(p1_->get_pos().x)+","+to_string(p1_->get_pos().y)+","+to_string(p1_->get_dir())+","+to_string(p1_->get_count())+",";
-      s += j+","+to_string(p1_bullet->pos_.x)+","+to_string(p1_bullet->pos_.y)+","+to_string(p1_bullet->dir_);
+      s += j+","+to_string(p1_bullet->pos_.x)+","+to_string(p1_bullet->pos_.y)+","+to_string(p1_bullet->dir_)+",";
+      s += to_string(p1_->score_);
       send_from_server(s,socket_);
       //cout<<"Server Enemy Send "<<s<<endl;
       string dump = receive_in_server(socket_);
@@ -334,10 +337,12 @@ void Pacman::play_game()  {
       p2_bullet->pos_.x = stoi(v[5]);
       p2_bullet->pos_.y = stoi(v[6]);
       p2_bullet->dir_ = stoi(v[7]);
+      p2_->score_ = stoi(v[8]);
     }else{
         string j = (p2_bullet->present_) ? "1":"0";
         string s = to_string(p2_->get_pos().x)+","+to_string(p2_->get_pos().y)+","+to_string(p2_->get_dir())+","+to_string(p2_->get_count())+",";
-        s += j+","+to_string(p2_bullet->pos_.x)+","+to_string(p2_bullet->pos_.y)+","+to_string(p2_bullet->dir_);
+        s += j+","+to_string(p2_bullet->pos_.x)+","+to_string(p2_bullet->pos_.y)+","+to_string(p2_bullet->dir_)+",";
+        s += to_string(p2_->score_);
         send_from_client(s,socket_);
         string in = receive_in_client(socket_);
         //cout<<"Cient Enemy Receive "<<in<<endl;
@@ -363,6 +368,7 @@ void Pacman::play_game()  {
         p1_bullet->pos_.x = stoi(v[i++]);
         p1_bullet->pos_.y = stoi(v[i++]);
         p1_bullet->dir_ = stoi(v[i++]);
+        p1_->score_ = stoi(v[i++]);
     }
   }
 
@@ -376,7 +382,7 @@ void Pacman::play_game()  {
     }
     for(auto &enemy : enemy_->enemies_){
       if(enemy.pos.distance(p1_bullet->pos_)<=5){
-        cout<<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
+        //cout<<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
         p1_->score_ += 100;
         enemy.state = Enemy::enemy_state::lose;
         if (music){
@@ -396,7 +402,7 @@ void Pacman::play_game()  {
     }
     for(auto &enemy : enemy_->enemies_){
       if(enemy.pos.distance(p2_bullet->pos_)<=5){
-        cout<<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
+        //cout<<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
         enemy.state = Enemy::enemy_state::lose;
         p2_->score_ += 100;
         if (music){
@@ -429,7 +435,7 @@ void Pacman::play_game()  {
 
 }
 
-void Pacman::game_clear()  {
+void Firebird::game_clear()  {
   maze_->draw(game_level_);
   food_->draw();
   enemy_->draw();
@@ -461,13 +467,15 @@ void Pacman::game_clear()  {
   }
 }
 
-void Pacman::game_miss()  {
+void Firebird::game_miss()  {
   maze_->draw(game_level_);
   food_->draw();
   enemy_->draw();
   p1_->draw(game_mode_);
   p2_->draw(game_mode_);
   draw_score();
+  p1_bullet->present_ = false;
+  p2_bullet->present_ = false;
 
   if (game_count_ == 0) {
     if (music){
@@ -512,7 +520,7 @@ void Pacman::game_miss()  {
   }
 }
 
-void Pacman::game_instructions()  {
+void Firebird::game_instructions()  {
   SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
   SDL_RenderClear(renderer_);
 
@@ -585,12 +593,13 @@ void Pacman::game_instructions()  {
   }
 }
 
-void Pacman::game_over()  {
+void Firebird::game_over()  {
   SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
   SDL_RenderClear(renderer_);
 
-  const Point gameover_pos = Point{165, 100};
-  const char *gameover_str = "G a m e O v e r";
+  const Point gameover_pos = Point{200, 100};
+  const char *gameover_str = "Game Over";
+  c = 1;
   switch (game_mode_) {
     case game_mode::single: {
       switch (game_count_) {
@@ -692,6 +701,10 @@ void Pacman::game_over()  {
           }
 
           if (input_manager_->press_key_p(0, 4)) {
+            cout<<"here 1"<<endl;
+            if (network_state == "server"){close_connection_server(socket_);}
+            if (network_state == "client"){close_connection_client(socket_);}
+            cout<<"here 11"<<endl;
             game_count_++;
             wipe_->set_wipe_out();
             wipe_->draw(640);

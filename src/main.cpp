@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <utility>
-#include "pacman.hpp"
+#include "firebird.hpp"
 #include "global.hpp"
 #include "client.hpp"
 #include "server.hpp"
@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
   network_state = argv[1];
   cout<<network_state<<endl;
   const string network_mode = network_state;
-  Pacman pacman(false);
-  pacman.run();
+  Firebird firebird(false);
+  firebird.run();
   exit(EXIT_SUCCESS);
 }

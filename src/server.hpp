@@ -21,8 +21,8 @@ static int start_server(){
 		perror("socket failed");
 		exit(EXIT_FAILURE);
 	}
-	
 	// Forcefully attaching socket to the port 8080
+	opt = 1;
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt)))
 	{
 		perror("setsockopt");
@@ -73,4 +73,10 @@ static std::string receive_in_server(int n){
 		out += buffer[i];
 	}
 	return out;
+}
+
+static void close_connection_server(int sock){
+	shutdown(sock,2);
+	close(sock);
+	cout<<"Disconnected!"<<endl;
 }

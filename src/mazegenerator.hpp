@@ -90,7 +90,7 @@ vector<string> generator(){
     //     cout<<endl;
     // }
     int j = 0;
-    while (j<150){
+    while (j<140){
         int x = rand()%22 + 1;
         int y = rand()%22 + 1;
         //cout<<x<<" "<<y<<endl;

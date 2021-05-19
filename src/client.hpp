@@ -57,3 +57,9 @@ static std::string receive_in_client(int n){
 	}
 	return out;
 }
+
+static void close_connection_client(int sock){
+	shutdown(sock,2);
+	close(sock);
+	cout<<"Disconnected!"<<endl;
+}

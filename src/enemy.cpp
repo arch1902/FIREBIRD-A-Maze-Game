@@ -177,8 +177,8 @@ void Enemy::move_lose_enemy(Enemy_data &enemy, const Maze &maze, const Player &p
   }
 
   const Point dst_pos = {enemy.next_block.x * 20,enemy.next_block.y * 20};
-  cout <<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
-  cout <<"Destination pos "<<dst_pos.x<<","<<dst_pos.y<<endl;
+  //cout <<"Enemy pos "<<enemy.pos.x<<","<<enemy.pos.y<<endl;
+  //cout <<"Destination pos "<<dst_pos.x<<","<<dst_pos.y<<endl;
   if (enemy.pos != dst_pos) {
     update();
 
@@ -198,32 +198,32 @@ void Enemy::move_lose_enemy(Enemy_data &enemy, const Maze &maze, const Player &p
   const unsigned int now_value = maze.get_home_distance(enemy.block);
   int x_ = enemy.block.x;
   int y_ = enemy.block.y;
-  cout<<now_value<<" "<<maze.get_home_distance(Point{x_, y_ - 1})<<" "<< maze.get_home_distance(Point{x_ - 1, y_})<<endl;
-  cout<<maze.get_home_distance(Point{x_ + 1, y_})<<" "<<maze.get_home_distance(Point{x_, y_ + 1})<<endl;
+  //cout<<now_value<<" "<<maze.get_home_distance(Point{x_, y_ - 1})<<" "<< maze.get_home_distance(Point{x_ - 1, y_})<<endl;
+  //cout<<maze.get_home_distance(Point{x_ + 1, y_})<<" "<<maze.get_home_distance(Point{x_, y_ + 1})<<endl;
   if (now_value > maze.get_home_distance(Point{x_, y_ - 1})) {
     enemy.next_block.y--;
-    cout<<"1"<<endl;
+    //cout<<"1"<<endl;
     return;
   }
 
   if (now_value > maze.get_home_distance(Point{x_ - 1, y_})) {
     enemy.next_block.x--;
-    cout<<"2"<<endl;
+    //cout<<"2"<<endl;
     return;
   }
 
   if (now_value > maze.get_home_distance(Point{x_ + 1, y_})) {
     enemy.next_block.x++;
-    cout<<"3"<<endl;
+    //cout<<"3"<<endl;
     return;
   }
 
   if (now_value > maze.get_home_distance(Point{x_, y_ + 1})) {
     enemy.next_block.y++;
-    cout<<"4"<<endl;
+    //cout<<"4"<<endl;
     return;
   }
-  cout<<"Oops"<<endl;
+  //cout<<"Oops"<<endl;
 }
 
 bool Enemy::check_hit_enemy(const game_mode mode, Player &p1, Player &p2)  {

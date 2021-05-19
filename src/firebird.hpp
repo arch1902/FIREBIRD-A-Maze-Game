@@ -34,7 +34,7 @@ const RGB red = RGB{0xff, 0x00, 0x00};
 const RGB white = RGB{0xff, 0xff, 0xff};
 };  // namespace rgb
 
-class Pacman {
+class Firebird {
   enum class game_state {
     title,
     start,
@@ -301,7 +301,7 @@ class Pacman {
   }
 
  public:
-  Pacman(const bool fullscreen_mode) 
+  Firebird(const bool fullscreen_mode) 
       : fullscreen_mode_(fullscreen_mode),
         window_(nullptr),
         renderer_(nullptr),
@@ -319,7 +319,7 @@ class Pacman {
       flags |= SDL_WINDOW_FULLSCREEN;
     }
     cout<<network_state<<endl;
-    string t = "pacman-sdl_"+network_state;
+    string t = "firebird-sdl_"+network_state;
     const char * s = t.c_str();
     cout<<network_state<<endl;
     window_ = SDL_CreateWindow(s, SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, 640, 480, flags);
@@ -351,7 +351,7 @@ class Pacman {
 
    void run()  {
     while(true) {
-      cout<<"Game Count : "<<game_count_<<endl;
+      //cout<<"Game Count : "<<game_count_<<endl;
       //cout<<network_state<<endl;
       input_manager_->update();
       switch (game_state_) {
@@ -395,7 +395,7 @@ class Pacman {
     }
   }
 
-  ~Pacman()  {
+  ~Firebird()  {
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);
     atexit(SDL_Quit);
