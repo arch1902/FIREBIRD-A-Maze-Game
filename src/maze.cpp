@@ -14,7 +14,7 @@
 
 extern string network_state;
 extern int socket_;
-
+bool is_valid = false;
 using namespace std;
 
 
@@ -44,198 +44,76 @@ maze_state char_to_maze_state(const char c) {
 }
 
 void Maze::init(const game_mode mode)  {
-  //cout<<"1"<<endl;
   string s;
-  // if (mode == game_mode::multiplayer){
-  //   cout<<"2"<<endl;
-  //   cout<<network<<endl;
-  //   if (network == "server"){
-  //     cout<<"3"<<endl;
-  //     s = generator();
-  //     send_from_server(s,n);
-  //     string in = receive_in_server(n);
-  //     cout<<"Sent"<<endl;
-  //   }else{
-  //     cout<<"5"<<endl;
-  //     send_from_client("Aane do!",n);
-  //     s = receive_in_client(n);
-  //     cout<<"Received\n"<<s<<endl;
-  //   }
-  // }else{
-  //   cout<<"6"<<endl;
-  //   s = generator();
-  // }
-  vector<string> map_ = generator();
+  vector<string> map_;
+  while(!is_valid){
+    map_ = generator();
+    s = map_[0];
+    for (int y = 0; y < 24; ++y) {
+      for (int x = 0; x < 24; ++x) {
+        block_[y][x] = char_to_maze_state(s[y * 24 + x]);
+      }
+    }
+
+    if (mode == game_mode::multiplayer) {
+      block_[18][14] = maze_state::init_p2_pos;
+    }
+
+    // '.' : enemy can reach, '#' : enemy cannot reach
+
+    const string enemy_reaches_block_p = map_[1];
+    const unsigned int maze_max_num = 10000;
+
+    bool reachedp[24][24];
+    for ( int y = 0; y < 24; ++y) {
+      for ( int x = 0; x < 24; ++x) {
+        home_distance_[y][x] = maze_max_num;
+        reachedp[y][x] = enemy_reaches_block_p[y * 24 + x] == '#';
+      }
+    }
+    const Point losed = Point{11, 12};  // Point where a losed enemy is gone.
+    const Point dirs[4] = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};  // down, left, up, right
+    home_distance_[losed.y][losed.x] = 1;
+    reachedp[losed.y][losed.x] = true;
+    queue<Point> que;
+    que.push(losed);
+      while (!que.empty()) {
+      const Point p = que.front();
+      que.pop();
+      int d = home_distance_[p.y][p.x] + 1;
+      for (const Point &dir : dirs) {
+        const Point e = p + dir;
+        if (e.x < 0 || e.x >= 24 || e.y < 0 || e.y >= 24 || reachedp[e.y][e.x]) {
+          continue;
+        }
+        reachedp[e.y][e.x] = true;
+        home_distance_[e.y][e.x] = d;
+        que.push(e);
+      }
+    }
+    if (home_distance_[18][9] != maze_max_num && home_distance_[18][14] != maze_max_num){
+      is_valid = true;
+    }
+  }
+
   if (mode == game_mode::multiplayer){
-    //cout<<"2"<<endl;
     cout<<network_state<<endl;
     if (network_state == "server"){
-      //cout<<"3"<<endl;
       s = map_[0];
       send_from_server(s,socket_);
       string in = receive_in_server(socket_);
-      //cout<<"Sent"<<endl;
     }else{
-      //cout<<"5"<<endl;
-      send_from_client("Aane do!",socket_);
+      send_from_client("Waiting",socket_);
       s = receive_in_client(socket_);
-      //cout<<"Received\n"<<s<<endl;
     }
   }else{
-    //cout<<"6"<<endl;
     s = map_[0];
   }
-  //cout<<"7"<<endl;
+  is_valid = false;
   const string block_src = s;
-  // const string block_src =
-  //     "########################"
-  //     "##..#.......##...##....#"
-  //     "#.C..#.##.#.#.........##"
-  //     "#.#.....#.....#..##.#.##"
-  //     "###......#..#.###..##.##"
-  //     "#....##....##.#...#....#"
-  //     "##.#.......#.#....##C#.#"
-  //     "###.#.#.##....#..#...###"
-  //     "##..###.#....###.#.#...#"
-  //     "#........##...#.....#.C#"
-  //     "##.###....#...#..#..#.##"
-  //     "####....###EE###......##"
-  //     "L...###.##EEEE####.#...R"
-  //     "##..#...##########..#.##"
-  //     "#.....#.##...#.....##..#"
-  //     "#.#....#..#..........###"
-  //     "###..#....#....#....#..#"
-  //     "##...#.##..###.#....#..#"
-  //     "###...##.P##.##....#.#.#"
-  //     "#...##....#..#.##......#"
-  //     "##.#####.........##....#"
-  //     "#...#...#...#......#...#"
-  //     "##......###....#C..##..#"
-  //     "########################";
-
-  for (int y = 0; y < 24; ++y) {
-    for (int x = 0; x < 24; ++x) {
-      block_[y][x] = char_to_maze_state(block_src[y * 24 + x]);
-    }
-  }
-
-  if (mode == game_mode::multiplayer) {
-    block_[18][14] = maze_state::init_p2_pos;
-  }
-
-  // '.' : enemy can reach, '#' : enemy cannot reach
-
-  const string enemy_reaches_block_p = map_[1];
-  // const string enemy_reaches_block_p = 
-  //   "########################"
-  //   "##..#.......##...##....#"
-  //   "#....#.##.#.#.........##"
-  //   "#.#.....#.....#..##.#.##"
-  //   "###......#..#.###..##.##"
-  //   "#....##....##.#...#....#"
-  //   "##.#.......#.#....##.#.#"
-  //   "###.#.#.##....#..#...###"
-  //   "##..###.#....###.#.#...#"
-  //   "#........##...#.....#..#"
-  //   "##.###....#...#..#..#.##"
-  //   "####....###.####......##"
-  //   "....###.###.######.#...." //y = 12/11 x = 11
-  //   "##..#...##########..#.##"
-  //   "#.....#.##...#.....##..#"
-  //   "#.#....#..#..........###"
-  //   "###..#....#....#....#..#"
-  //   "##...#.##..###.#....#..#"
-  //   "###...##..##.##....#.#.#"
-  //   "#...##....#..#.##......#"
-  //   "##.#####.........##....#"
-  //   "#...#...#...#......#...#"
-  //   "##......###....#...##..#"
-  //   "########################";
 
 
 
-
-
-      // "########################"
-      // "#..........##..........#"
-      // "#.##.#####.##.#####.##.#"
-      // "#.##.#####.##.#####.##.#"
-      // "#.##.#####.##.#####.##.#"
-      // "#......................#"
-      // "#.##.##.########.##.##.#"
-      // "#.##.##....##....##.##.#"
-      // "#....#####.##.#####....#"
-      // "####.#####.##.#####.####"
-      // "####.##..........##.####"
-      // "####.##.###.####.##.####"
-      // "........###.####........"
-      // "####.##.########.##.####"
-      // "####.##..........##.####"
-      // "####.##.########.##.####"
-      // "#..........##..........#"
-      // "#.##.#####.##.#####.##.#"
-      // "#..#................#..#"
-      // "##.#.##.########.##.#.##"
-      // "#....##....##....##....#"
-      // "#.########.##.########.#"
-      // "#......................#"
-      // "########################";
-
-  // Max value which doesn't appear in the distance maze.
-  const unsigned int maze_max_num = 10000;
-
-  // BFS
-  bool reachedp[24][24];
-  for ( int y = 0; y < 24; ++y) {
-    for ( int x = 0; x < 24; ++x) {
-      home_distance_[y][x] = maze_max_num;
-      reachedp[y][x] = enemy_reaches_block_p[y * 24 + x] == '#';
-    }
-  }
-// #,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,
-// #,#,.,.,#,.,.,.,.,.,.,.,#,#,.,.,.,#,#,.,.,.,.,#,
-// #,.,.,.,.,#,.,#,#,.,#,.,#,.,.,.,.,.,.,.,.,.,#,#,
-// #,.,#,.,.,.,.,.,#,.,.,.,.,.,#,.,.,#,#,.,#,.,#,#,
-// #,#,#,.,.,.,.,.,.,#,.,.,#,.,#,#,#,.,.,#,#,.,#,#,
-// #,.,.,.,.,#,#,.,.,.,.,#,#,.,#,.,.,.,#,.,.,.,.,#,
-// #,#,.,#,.,.,.,.,.,.,.,#,.,#,.,.,.,.,#,#,.,#,.,#,
-// #,#,#,.,#,.,#,.,#,#,.,.,.,.,#,.,.,#,.,.,.,#,#,#,
-// #,#,.,.,#,#,#,.,#,.,.,.,.,#,#,#,.,#,.,#,.,.,.,#,
-// #,.,.,.,.,.,.,.,.,#,#,.,.,.,#,.,.,.,.,.,#,.,.,#,
-// #,#,.,#,#,#,.,.,.,.,#,.,.,.,#,.,.,#,.,.,#,.,#,#,
-// #,#,#,#,.,.,.,.,#,#,#,2,3,#,#,#,.,.,.,.,.,.,#,#,
-// .,.,.,.,#,#,#,.,#,#,#,1,#,#,#,#,#,#,.,#,.,.,.,.,
-// #,#,.,.,#,.,.,.,#,#,#,#,#,#,#,#,#,#,.,.,#,.,#,#,
-// #,.,.,.,.,.,#,.,#,#,.,.,.,#,.,.,.,.,.,#,#,.,.,#,
-// #,.,#,.,.,.,.,#,.,.,#,.,.,.,.,.,.,.,.,.,.,#,#,#,
-// #,#,#,.,.,#,.,.,.,.,#,.,.,.,.,#,.,.,.,.,#,.,.,#,
-// #,#,.,.,.,#,.,#,#,.,.,#,#,#,.,#,.,.,.,.,#,.,.,#,
-// #,#,#,.,.,.,#,#,.,.,#,#,.,#,#,.,.,.,.,#,.,#,.,#,
-// #,.,.,.,#,#,.,.,.,.,#,.,.,#,.,#,#,.,.,.,.,.,.,#,
-// #,#,.,#,#,#,#,#,.,.,.,.,.,.,.,.,.,#,#,.,.,.,.,#,
-// #,.,.,.,#,.,.,.,#,.,.,.,#,.,.,.,.,.,.,#,.,.,.,#,
-// #,#,.,.,.,.,.,.,#,#,#,.,.,.,.,#,.,.,.,#,#,.,.,#,
-// #,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,#,
-  const Point losed = Point{11, 12};  // Point where a losed enemy is gone.
-  const Point dirs[4] = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};  // down, left, up, right
-  home_distance_[losed.y][losed.x] = 1;
-  reachedp[losed.y][losed.x] = true;
-  queue<Point> que;
-  que.push(losed);
-  while (!que.empty()) {
-    const Point p = que.front();
-    que.pop();
-    int d = home_distance_[p.y][p.x] + 1;
-    for (const Point &dir : dirs) {
-      const Point e = p + dir;
-      if (e.x < 0 || e.x >= 24 || e.y < 0 || e.y >= 24 || reachedp[e.y][e.x]) {
-        continue;
-      }
-      reachedp[e.y][e.x] = true;
-      home_distance_[e.y][e.x] = d;
-      que.push(e);
-    }
-  }
   // for (auto j : home_distance_){
   //   for (int i = 0;i<24;i++){
   //     if (j[i] != maze_max_num){
