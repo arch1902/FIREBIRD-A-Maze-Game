@@ -159,7 +159,7 @@ class Pacman {
       draw_text(1, rgb::white, Point{x3, y3}, life.str().c_str());
 
       if (game_mode_ == game_mode::multiplayer) {
-        const unsigned int offset_y = 80;
+        const unsigned int offset_y = 310;
         stringstream score;
         score << "S c o r e  :  " << setw(6) << p2_->get_score();
         draw_text(1, rgb::white, Point{x1, y1 + offset_y},
@@ -181,16 +181,16 @@ class Pacman {
     // Draw the rest time of power mode.
     {
       const unsigned int x = 480 + 10;
-      const unsigned int y = 480 / 6 * 4;
+      const unsigned int y = 480 / 6 * 4 + 80;
       if (p1_->get_power_mode()) {
         SDL_SetRenderDrawColor(renderer_, 255, 255, 0, 255);
         const SDL_Rect dst = {
-            x, y, static_cast<Uint16>(p1_->get_power_mode() / 4), 20};
+            x, y-270, static_cast<Uint16>(p1_->get_power_mode() / 4), 20};
         SDL_RenderFillRect(renderer_, &dst);
       }
       if (p2_->get_power_mode()) {
-        SDL_SetRenderDrawColor(renderer_, 128, 128, 0, 255);
-        const SDL_Rect dst = {x, y + 30,
+        SDL_SetRenderDrawColor(renderer_, 255, 255, 0, 255);
+        const SDL_Rect dst = {x, y + 50,
                               static_cast<Uint16>(p2_->get_power_mode() / 4),
                               20};
         SDL_RenderFillRect(renderer_, &dst);
