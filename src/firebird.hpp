@@ -83,6 +83,8 @@ class Firebird {
     enemy_->draw();
     p1_->draw(game_mode_);
     p2_->draw(game_mode_);
+    if (p1_bullet->present_){p1_bullet->draw();}
+    if (p2_bullet->present_){p2_bullet->draw();}
     draw_score();
     draw_translucence();
     if (input_manager_->edge_key_p(0, 4)) {

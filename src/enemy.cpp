@@ -17,7 +17,7 @@ void Enemy::move_normal_enemy(Enemy_data &enemy,const Maze &maze,int game_level,
     update();
 
     int move_value;
-    if(game_level==1) move_value=2;
+    if(game_level==1) move_value=1;
     else if (game_level==2) move_value=4;
     else if (game_level==3) move_value=5;
     else move_value=10;

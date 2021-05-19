@@ -678,13 +678,25 @@ void Firebird::game_over()  {
           const unsigned int p1_score = p1_->get_score();
           const unsigned int p2_score = p2_->get_score();
           if (p1_score > p2_score) {
-            ss << "P 1  W I N S  : " << p1_score;
-            draw_text(0, rgb::black, Point{170, 240},
-                      ss.str().c_str());
+            if (network_state == "server"){
+              ss << "Y O U  W I N :) => " << p1_score;
+              draw_text(0, rgb::black, Point{100, 240},
+                        ss.str().c_str());
+            }else{
+              ss << "Y O U  L O S E :( => " << p2_score;
+              draw_text(0, rgb::black, Point{100, 240},
+                        ss.str().c_str());
+            }
           } else if (p1_score < p2_score) {
-            ss << "P 2  W I N S  : " << p2_score;
-            draw_text(0, rgb::black, Point{170, 240},
-                      ss.str().c_str());
+            if (network_state == "client"){
+              ss << "Y O U  W I N :) => " << p2_score;
+              draw_text(0, rgb::black, Point{100, 240},
+                        ss.str().c_str());
+            }else{
+              ss << "Y O U  L O S E :( => " << p1_score;
+              draw_text(0, rgb::black, Point{100, 240},
+                        ss.str().c_str());
+            }
           } else {
             ss << "D R A W  " << p1_score;
             draw_text(0, rgb::black, Point{170, 240},
