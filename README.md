@@ -6,6 +6,8 @@ Use ```./firebird-sdl server``` to play the game.
 ### For Multiplayer
 * The first player will have to start the game using ```./firebird-sdl server``` and then select the two player option.
 * The second player will have to run the command ```./firebird-sdl client``` and then select the two player option.  
+
+Use ```-f``` (Optional) flag in command to execute in fullscreen mode.  
 On doing this, the game would start for both the players.
 
 ## Libraries and Packages 
