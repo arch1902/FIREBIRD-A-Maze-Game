@@ -111,29 +111,6 @@ void Maze::init(const game_mode mode)  {
   }
   is_valid = false;
   const string block_src = s;
-
-
-
-  // for (auto j : home_distance_){
-  //   for (int i = 0;i<24;i++){
-  //     if (j[i] != maze_max_num){
-  //       if (j[i]<=9){
-  //         cout<<"0"<<j[i]<<",";
-  //       }else{
-  //         cout<<j[i]<<",";
-  //       }
-  //     }else{
-  //       cout<<"__,";
-  //     }
-  //   }
-  //   cout<<endl;
-  // }
-  // for (int j = 0;j<24;j++){
-  //   for (int i = 0;i<24;i++){
-  //     cout<<block_src[j*24+i]<<",";
-  //   }
-  //   cout<<endl;
-  // }
 }
 
 void Maze::draw(const unsigned int game_level) const  {

@@ -54,18 +54,14 @@ static int start_server(){
 }
 
 static void send_from_server(string s,int n){
-	//cout<<"Server trying to send :"<<s<<endl;
-	//cout<<"Server Socket :" << new_socket<<endl;
 	const char * msg = s.c_str();
 	send(n,msg,strlen(msg),0);
-	//cout<<"Sent!"<<endl;
 }
 
 static std::string receive_in_server(int n){
 	char buffer[1024] = {0};
 	auto j = buffer[1];
 	int valread = read(n, buffer, 1024);
-	//printf("%s\n",buffer );
 	std::string out;
 	int len = sizeof(buffer)/(8*sizeof(char));
 	for (int i = 0;i<len;i++){

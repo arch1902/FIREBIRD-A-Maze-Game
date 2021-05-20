@@ -94,27 +94,19 @@ class Firebird {
 
    void draw_text(const unsigned char font_size, const RGB &rgb,
                         const Point &p, const char *str) const  {
-    //cout<<"1"<<endl;
     const SDL_Color color = {rgb.r, rgb.g, rgb.b, 255};
-    //cout<<"11"<<endl;
     SDL_Surface *font_surface =
         TTF_RenderUTF8_Blended(font_manager_.get(font_size), str, color);
-    //cout<<"111"<<endl;
     SDL_Texture *font_texture =
         SDL_CreateTextureFromSurface(renderer_, font_surface);
-    //cout<<"1111"<<endl;
     const SDL_Rect src = {0, 0, static_cast<Uint16>(font_surface->w),
                           static_cast<Uint16>(font_surface->h)};
-    //cout<<"11111"<<endl;
     SDL_Rect dst;
     dst.x = static_cast<Sint16>(p.x);
     dst.y = static_cast<Sint16>(p.y);
     SDL_QueryTexture(font_texture, nullptr, nullptr, &dst.w, &dst.h);
-    //cout<<"111111"<<endl;
     SDL_RenderCopy(renderer_, font_texture, &src, &dst);
-    //cout<<"1111111"<<endl;
     SDL_DestroyTexture(font_texture);
-    //cout<<"END"<<endl;
   }
 
    void draw_text(const unsigned char font_size, const RGB &&rgb,
@@ -133,8 +125,6 @@ class Firebird {
   }
 
    void draw_score() const  {
-    // TODO : divide it into private functions
-    // Draw the plate of background.
     {
       SDL_Texture *p_texture = image_manager_->get(13);
       SDL_Rect dst;
@@ -145,7 +135,6 @@ class Firebird {
       SDL_DestroyTexture(p_texture);
     }
 
-    // Draw the score itself.
     {
       const unsigned int x1 = 480 + 20;
       const unsigned int y1 = 480 / 7 + 10;
@@ -188,7 +177,6 @@ class Firebird {
       }
     }
 
-    // Draw the rest time of power mode.
     {
       const unsigned int x = 480 + 10;
       const unsigned int y = 480 / 6 * 4 + 80;
@@ -220,7 +208,6 @@ class Firebird {
           }
           break;
         default:
-          // do nothing
           break;
       }
     }
@@ -257,12 +244,14 @@ class Firebird {
         frame_rate = 1000.0 / interval;
       }
 
-      stringstream ss;
-      ss << "FrameRate[" << setprecision(2)
-         << setiosflags(ios::fixed) << frame_rate << "]";
-      draw_text(1, rgb::white, Point{480 + 15, 16},
-                ss.str().c_str());
+      // stringstream ss;
+      // ss << "FrameRate[" << setprecision(2)
+      //    << setiosflags(ios::fixed) << frame_rate << "]";
+      // draw_text(1, rgb::white, Point{480 + 15, 16},
+      //           ss.str().c_str());
+      cout<< "FrameRate +> "<<frame_rate<<endl;
     }
+    
     pre_count = now_count;
   }
 
@@ -348,41 +337,32 @@ class Firebird {
     p1_ = make_unique<Player>(0, image_manager_.get(), input_manager_.get());
     p2_ = make_unique<Player>(1, image_manager_.get(), input_manager_.get());
 
-    SDL_ShowCursor(SDL_DISABLE);
+    //SDL_ShowCursor(SDL_DISABLE);
   }
 
    void run()  {
     while(true) {
-      //cout<<"Game Count : "<<game_count_<<endl;
-      //cout<<network_state<<endl;
       input_manager_->update();
       switch (game_state_) {
         case game_state::title:
-          //cout<<"Game State : title"<<endl;
           game_title();
           break;
         case game_state::start:
-          //cout<<"Game State : Start"<<endl;
           game_start();
           break;
         case game_state::playing:
-          //cout<<"Game State : Playing"<<endl;
           play_game();
           break;
         case game_state::clear:
-          //cout<<"Game State : Clear"<<endl;
           game_clear();
           break;
         case game_state::miss:
-          //cout<<"Game State : Miss"<<endl;
           game_miss();
           break;
         case game_state::gameover:
-          //cout<<"Game State : Gameover"<<endl;
           game_over();
           break;
         case game_state::pause:
-          //cout<<"Game State : Pause"<<endl;
           game_pause();
           break;
         case game_state::instructions:
@@ -394,6 +374,7 @@ class Firebird {
       }
       SDL_RenderPresent(renderer_);
       wait_game();
+      //draw_fps();
     }
   }
 

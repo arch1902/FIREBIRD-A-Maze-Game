@@ -25,14 +25,10 @@ class Bullet {
 
     void draw() {
         SDL_Texture *bullet_texture;
-        //cout<<"here1"<<endl;
         bullet_texture = image_manager_->get(14);
-        //cout<<"here2"<<endl;
         const SDL_Rect dst = {(pos_.x),(pos_.y),20,20};
         const SDL_Rect src = {0,0,20,20};
-        //cout<<"here3"<<endl;
         image_manager_->render_copy(*bullet_texture, src, dst);
-        //cout<<"here4"<<endl;
         SDL_DestroyTexture(bullet_texture);
     }
     void move(const Maze &maze) {

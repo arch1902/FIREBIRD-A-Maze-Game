@@ -65,8 +65,6 @@ class Enemy {
   }
 
    void init()  {
-    //  cout<<"------------------------------------------"<<endl;
-    //  cout<<network_state<<endl;
     const Point start_block[4] = {{11, 12}, {12, 12}, {11, 11}, {12, 11}};
     for (auto &enemy : enemies_) {
       enemy.pos = {20 * start_block[enemy.type].x, 20 * start_block[enemy.type].y};
@@ -80,8 +78,6 @@ class Enemy {
   }
 
    void draw() const  {
-    // cout<<"------------------------------------------"<<endl;
-    // cout<<network_state<<endl;
     SDL_Texture *enemies_texture[4];
     enemies_texture[0] = image_manager_->get(8);
     enemies_texture[1] = image_manager_->get(9);
