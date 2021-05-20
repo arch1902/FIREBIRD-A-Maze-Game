@@ -63,10 +63,15 @@ Options:
 int main(int argc, char **argv) {
 
   //bool is_fullscreen = parse_options(argc, argv);
+  string full = "";
   network_state = argv[1];
+  if (argc > 2){
+    full = argv[2];
+  }
   cout<<network_state<<endl;
   const string network_mode = network_state;
-  Firebird firebird(false);
+  bool flag = (full == "-f") ? true : false;
+  Firebird firebird(flag);
   firebird.run();
   exit(EXIT_SUCCESS);
 }
